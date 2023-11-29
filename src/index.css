@@ -1,0 +1,39 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+body {
+    font-family: "Lato", sans-serif;
+}
+
+/* Apply the styles to the scrollbar container */
+::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+/* Define the track (background) of the scrollbar */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Background color */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+/* Define the thumb (the draggable part of the scrollbar) */
+::-webkit-scrollbar-thumb {
+    background: #2cc019;
+    border-radius: 7px;
+
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #027004;
+}
+::-webkit-scrollbar-button {
+    display: none;
+}
+.number-input::-webkit-inner-spin-button,
+.number-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
