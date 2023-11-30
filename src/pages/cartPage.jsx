@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../assets/loading";
 function CartPage() {
-  /// cart id 
+  /// cart id
   let [cart_id, setCartId] = useState("");
   /// user picks
   let [userPicks, setUserPicks] = useState([]);
@@ -27,7 +27,7 @@ function CartPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.cart.allCartProducts) {
-          setCartId(data.cart.cart_id)
+          setCartId(data.cart.cart_id);
           setUserPicks(data.cart.allCartProducts);
           setFetching(false);
         } else {
@@ -58,8 +58,8 @@ function CartPage() {
         method: "DELETE",
         mode: "cors",
         headers: {
-          itemId,
-          cartId,
+          itemid: itemId,
+          cartid: cartId,
         },
       }
     )
@@ -69,8 +69,8 @@ function CartPage() {
           setMsg("somthing wrong, try again later");
           return;
         }
-        setDeleting(false);
-        setMsg("removing item from your cart ...");
+  
+        setMsg("updating your cart ...");
         window.scrollTo({
           top: 0,
           behavior: "smooth",
@@ -214,7 +214,7 @@ function CartPage() {
                   <button
                     className="w-full h-fit p-2 flex items-center justify-center hover:bg-red-100 transition duration-300 rounded-lg"
                     onClick={() => {
-                      removeItem(pk.itemId, pk.cart_id);
+                      removeItem(pk.itemId, cart_id);
                     }}
                   >
                     <svg
@@ -244,7 +244,9 @@ function CartPage() {
           <h2>total price: {totalPrice.toFixed(2)}</h2>
         </div>
         <Link to={`/checkout/${cart_id}`}>
-          <button className="p-2 rounded-md bg-teal-500 text-white hover:bg-teal-600 transition duration-300 float-right">complete order</button>
+          <button className="p-2 rounded-md bg-teal-500 text-white hover:bg-teal-600 transition duration-300 float-right">
+            complete order
+          </button>
         </Link>
       </div>
       {/* other items maybe you like */}
