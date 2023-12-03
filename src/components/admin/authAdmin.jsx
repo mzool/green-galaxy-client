@@ -27,6 +27,7 @@ function AuthAdmin() {
   let firstOtbvalue = useRef();
   /// check if the admin has authenticated
   useEffect(() => {
+    setFetch(true);
     /// get user info
     fetch(
       `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
@@ -64,9 +65,11 @@ function AuthAdmin() {
             .then((res) => res.json())
             .then((data) => {
               if (data.success === true) {
+                setFetch(false);
                 setSession(true);
                 setAdmin(true);
               } else {
+                setFetch(true)
                 /// auth admin
                 fetch(
                   `${import.meta.env.VITE_domain}${
@@ -81,6 +84,7 @@ function AuthAdmin() {
                   .then((res) => res.json())
                   .then((data) => {
                     if (data.success && data.permessions) {
+                      setFetch(false)
                       setAdmin(true);
                     } else {
                       setOtp({});
@@ -151,7 +155,7 @@ function AuthAdmin() {
   if (session === true && user === true && admin === true) {
     return <Admin />;
   }
-  if (user === true && session === false) {
+  if (user === true && session === false && startFetch == false) {
     return (
       <div className="w-full h-screen flex justify-center bg-white p-4 ">
         <div className="sm:w-3/6 w-full h-1/6 bg-green-100 h-fit shadow-xl shadow-green-500 rounded-lg p-2 grid grid-rows-2 gap-2 border-zinc-200 border-2">

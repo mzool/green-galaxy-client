@@ -1,9 +1,9 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../assets/loading";
 import Comments from "./comments/comments";
 function GetBlog() {
-  const url = useLocation().pathname.split("/blogs/")[1].trim();
+  const {blogId} = useParams();
   /// blog information
   let [blog, setBlog] = useState({
     title: "",
@@ -23,7 +23,7 @@ function GetBlog() {
           mode: "cors",
           credentials: "include",
           headers: {
-            blog_id: url,
+            blog_id: blogId,
           },
         }
       )
@@ -40,14 +40,14 @@ function GetBlog() {
               title: data.data.title,
               body: data.data.body,
               imageURL: data.data.coverImage,
-             comments: data.data.comments,
+              comments: data.data.comments,
             });
           }
         });
     } catch (err) {
       console.log(err);
     }
-  }, [url]);
+  }, [blogId]);
   if (!blog.title) {
     return <LoadingSpinner color={"green-500"} />;
   }
