@@ -9,6 +9,8 @@ function CartPage() {
   /// is fetching
   let [isFetching, setFetching] = useState(false);
   /// for rendering control
+  /// item deleted to update page after delete item
+  let [itemDeleted, setItemDeleted] = useState(0);
   /// msg
   let [msg, setMsg] = useState("");
   /// get cart items from server
@@ -35,21 +37,11 @@ function CartPage() {
           setFetching(false);
         }
       });
-  }, []);
-  /////////////////////////////////////////////////////////////// get total price
-  let [totalPrice, setTotalPrice] = useState(0);
-  useEffect(() => {
-    if (userPicks.length > 0) {
-      userPicks.forEach((item) => {
-        setTotalPrice((pr) => pr + item.totalPrice);
-      });
-    }
-  }, [userPicks]);
+  }, [itemDeleted]);
   //// remove item from cart
   ///////////////////////////////////////////////////// deleting variable for rendering control
-  let [deleting, setDeleting] = useState(false);
   function removeItem(itemId, cartId) {
-    setDeleting(true);
+    setMsg("updating your cart ...");
     fetch(
       `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
         import.meta.env.VITE_delete_cart_item
@@ -69,15 +61,12 @@ function CartPage() {
           setMsg("somthing wrong, try again later");
           return;
         }
-  
-        setMsg("updating your cart ...");
         window.scrollTo({
           top: 0,
           behavior: "smooth",
         });
-        setTimeout(() => {
-          window.location.reload("self");
-        }, 5000);
+        setItemDeleted((pr) => pr + 1);
+        setMsg("");
       });
   }
   /// if is fetching
@@ -133,7 +122,7 @@ function CartPage() {
   }
   /// rendering
   return (
-    <div className="h-fit w-full p-4 flex flex-col gap-4 ">
+    <div className="h-fit min-h-screen w-full p-4 flex flex-col gap-4 items-center justify-center">
       {/* message */}
       {msg && (
         <div className="w-full p-2 bg-gradient-to-r from-green-400 to-green-600 rounded-md text-white flex flex-col items-center justify-center">
@@ -145,13 +134,13 @@ function CartPage() {
           <div
             key={index}
             // make it responsive
-            className="bg-gradient-to-r from-green-500 to-green-700 p-4 text-white rounded-lg w-full h-fit"
+            className="bg-gradient-to-r from-gray-600 to-teal-900 p-4 text-white rounded-lg w-4/6 h-fit"
           >
             {/* product information */}
-            <div className="grid grid-cols-6 gap-2 justify-start h-fit">
+            <div className="grid grid-cols-6 gap-2 justify-start h-24 p-2 items-center">
               {/* image */}
-              <Link to={`../products/${pk.id}`} className="w-full h-full">
-                <img src={pk.image} alt={pk.name} className="rounded-lg" />
+              <Link to={`../products/${pk.id}`} className="w-full">
+                <img src={pk.image} alt={pk.name} className="rounded-lg w-20" />
               </Link>
               {/* name and stock*/}
               <div className="flex flex-col gap-2 items-center justify-center">
@@ -191,13 +180,9 @@ function CartPage() {
               <div className="flex flex-col gap-2 items-center justify-center">
                 <label htmlFor="quantity">quantity:</label>
                 <div>
-                  <input
-                    id="quantity"
-                    type="number"
-                    value={pk.quantity}
-                    readOnly
-                    className="rounded-lg p-2 w-full outline-0 text-green-600"
-                  />
+                  <p className="rounded-lg p-1 w-full outline-0 text-white">
+                    {pk.quantity}
+                  </p>
                 </div>
               </div>
 
@@ -208,41 +193,34 @@ function CartPage() {
               </div>
               {/* remove */}
               <div className="flex items-center justify-center">
-                {deleting ? (
-                  <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-white place-self-center"></div>
-                ) : (
-                  <button
-                    className="w-full h-fit p-2 flex items-center justify-center hover:bg-red-100 transition duration-300 rounded-lg"
-                    onClick={() => {
-                      removeItem(pk.itemId, cart_id);
-                    }}
+                <button
+                  className="w-full h-fit p-2 flex items-center justify-center hover:bg-red-100 transition duration-300 rounded-lg"
+                  onClick={() => {
+                    removeItem(pk.itemId, cart_id);
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="red"
+                    className="w-6 h-6"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="red"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
         );
       })}
       {/* total and order page*/}
-      <div className="w-full h-fit text-green-600 bg-zinc-100 rounded p-4 grid grid-cols-2 ">
-        <div>
-          <h2>total price: {totalPrice.toFixed(2)}</h2>
-        </div>
+      <div className="w-full h-fit text-green-600 bg-zinc-100 rounded p-4 flex ">
         <Link to={`/checkout/${cart_id}`}>
           <button className="p-2 rounded-md bg-teal-500 text-white hover:bg-teal-600 transition duration-300 float-right">
             complete order

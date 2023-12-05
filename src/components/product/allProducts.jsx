@@ -14,12 +14,22 @@ function AllProducts() {
   /// fetch all product api
   let [startFetching, setStartFetching] = useState(false);
   useEffect(() => {
+    const credentials = btoa("greengalaxy:apipasswordgreengalaxy");
     setStartFetching(true);
     /// fetch
     fetch(
       `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
         import.meta.env.VITE_all_products
-      }?page=${parseInt(searchParams.get("page"))}&limit=${parseInt(searchParams.get("limit"))}`
+      }?page=${parseInt(searchParams.get("page"))}&limit=${parseInt(
+        searchParams.get("limit")
+      )}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          Authorization: credentials,
+        },
+      }
     )
       .then((res) => res.json())
       .then((data) => {
@@ -34,7 +44,10 @@ function AllProducts() {
   }, [searchParams]);
   /// page control
   function increase() {
-    setSearchParams({ page: parseInt(searchParams.get("page")) + 1, limit: parseInt(searchParams.get("limit")) });
+    setSearchParams({
+      page: parseInt(searchParams.get("page")) + 1,
+      limit: parseInt(searchParams.get("limit")),
+    });
   }
   function decrease() {
     if (parseInt(searchParams.get("page")) > 1) {
@@ -55,8 +68,8 @@ function AllProducts() {
     console.log(filter);
   }
   /// when start fetching
-  if (startFetching && allProduct.length ===0){
-    return <LoadingSpinner color={"green-600"}/>
+  if (startFetching && allProduct.length === 0) {
+    return <LoadingSpinner color={"green-600"} />;
   }
   /// if no products found
   if (allProduct.length === 0 && startFetching === false) {
