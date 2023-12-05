@@ -183,7 +183,7 @@ const Navbar = () => {
           ) : userName ? (
             <button
               onClick={logout}
-              className="bg-red-600 text-white rounded-lg h-fit w-fit p-1 hover:bg-white hover:text-red-600 transition ease-in-out duration-300"
+              className="bg-red-600 text-white rounded-lg h-fit w-fit p-2 hover:bg-white hover:text-red-600 transition ease-in-out duration-300"
             >
               Log out
             </button>

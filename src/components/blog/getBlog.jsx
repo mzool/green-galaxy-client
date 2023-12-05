@@ -21,7 +21,6 @@ function GetBlog() {
         {
           method: "get",
           mode: "cors",
-          credentials: "include",
           headers: {
             blog_id: blogId,
           },
@@ -45,7 +44,7 @@ function GetBlog() {
           }
         });
     } catch (err) {
-      console.log(err);
+      console.log("something went error");
     }
   }, [blogId]);
   if (!blog.title) {

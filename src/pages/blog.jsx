@@ -8,11 +8,6 @@ function Blog() {
   let [allBlogs, setAllBlogs] = useState([]);
   /// get all blogs
   useEffect(() => {
-    console.log(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_get_all_blogs
-      }`
-    );
     fetch(
       `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
         import.meta.env.VITE_get_all_blogs
