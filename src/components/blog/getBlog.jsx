@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "../../assets/loading";
 import Comments from "./comments/comments";
 function GetBlog() {
-  const {blogId} = useParams();
+  const {blog_id} = useParams();
   /// blog information
   let [blog, setBlog] = useState({
     title: "",
@@ -22,7 +22,7 @@ function GetBlog() {
           method: "get",
           mode: "cors",
           headers: {
-            blog_id: blogId,
+            blog_id: blog_id,
           },
         }
       )
@@ -46,7 +46,7 @@ function GetBlog() {
     } catch (err) {
       console.log("something went error");
     }
-  }, [blogId]);
+  }, [blog_id]);
   if (!blog.title) {
     return <LoadingSpinner color={"green-500"} />;
   }

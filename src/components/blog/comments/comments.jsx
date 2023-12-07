@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 function Comments() {
   /// get blog id
-  const blog_id = useLocation().pathname.split("/blogs/")[1].trim();
+  const { blog_id } = useParams();
   /// style
   let [style, setStyle] = useState({
     inputs:
@@ -34,6 +34,9 @@ function Comments() {
         headers: {
           "content-type": "application/json",
           blog_id: blog_id,
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
         },
         body: JSON.stringify({
           username: formValues.username,
@@ -41,35 +44,36 @@ function Comments() {
           body: formValues.body,
         }),
       }
-    ).then((res) => {
-      if (res.status == 400) {
-        setMsg({
-          err: "you can just use letters, numbers, .;,_ and max length is 300 letters",
-        });
-      } else {
-        setMsg({
-          err: "",
-          msg: "",
-        });
-        res.json().then((data) => {
-          if (data.success == true) {
-            setMsg({
-              err: "",
-              msg: data.message,
-            });
-            setFetching(false);
-            setFormValues({
-              username:"",
-              email:"",
-              body:""
-            })
-            setTimeout(() => {
-              setMsg({ msg: "", err: "" });
-            }, 10000);
-          }
-        });
-      }
-    });
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success == true) {
+          setMsg({
+            err: "",
+            msg: data.message,
+          });
+          setFetching(false);
+          setFormValues({
+            username: "",
+            email: "",
+            body: "",
+          });
+          setTimeout(() => {
+            setMsg({ msg: "", err: "" });
+          }, 10000);
+        } else {
+          setMsg({ err: data.error || data.errors[0].split(":")[0], msg: "" });
+          setFormValues({
+            username: "",
+            email: "",
+            body: "",
+          });
+          setTimeout(() => {
+            setMsg({ msg: "", err: "" });
+          }, 10000);
+        }
+      });
+    setFetching(false);
   }
   /// get all comments
   let [comments, setComments] = useState([]);
@@ -85,11 +89,13 @@ function Comments() {
           blog_id: blog_id,
         },
       }
-    ).then((res)=>res.json()).then((data)=>{
-      if(data.success){
-        setComments(data.data)
-      }
-    })
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setComments(data.data);
+        }
+      });
   }, []);
   /// rendering
   return (
@@ -158,17 +164,19 @@ function Comments() {
       {/* past comments */}
       <div className="mt-2 flex flex-col w-full p-4 ">
         <h2>All comments:</h2>
-        {comments.length==0?"no comments":comments.map((comment, i) => {
-          return (
-            <div
-              key={i}
-              className={i % 2 != 0 ? "bg-zinc-50 p-2" : "bg-zinc-100 p-2"}
-            >
-              <p>username: {comment.user_name}</p>
-              <p>{comment.body}</p>
-            </div>
-          );
-        })}
+        {comments.length == 0
+          ? "no comments"
+          : comments.map((comment, i) => {
+              return (
+                <div
+                  key={i}
+                  className={i % 2 != 0 ? "bg-zinc-50 p-2" : "bg-zinc-100 p-2"}
+                >
+                  <p>username: {comment.user_name}</p>
+                  <p>{comment.body}</p>
+                </div>
+              );
+            })}
       </div>
     </div>
   );

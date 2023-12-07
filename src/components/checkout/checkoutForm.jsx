@@ -25,6 +25,10 @@ function CheckoutForm(props) {
     onSubmit: (values) => {
       setProgress({ ...progress, payment: true });
       setShippingInfo(values);
+      window.scrollTo({
+        top:500,
+        behavior:"smooth"
+      })
     },
   });
   /// style
@@ -141,7 +145,7 @@ function CheckoutForm(props) {
             <div className="text-red-500 text-xs">{formik.errors.phone}</div>
           ) : null}
         </div>
-        <hr className="m-4" />
+        <hr className="m-2" />
         {/* shipping address */}
         <div>
           <h2>Shipping Information:</h2>
@@ -236,7 +240,7 @@ function CheckoutForm(props) {
             ) : null}
           </div>
         </div>
-        <hr className="m-4" />
+        <hr className="m-2" />
         {/* confirm shipping address */}
         <div>
           {!progress.payment&&<button

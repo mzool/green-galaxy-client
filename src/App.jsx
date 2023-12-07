@@ -26,6 +26,9 @@ import Blog from "./pages/blog";
 import GetBlog from "./components/blog/getBlog";
 /// checkout
 import Checkout from "./pages/checkout";
+//// track order
+import TrackOrder from "./pages/trackOrder";
+
 //////////////////////
 function App() {
   /// context api for global store
@@ -57,22 +60,16 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/*" element={<NotFound />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route
-            path="/about-us"
-            element={
-              <>
-                <AboutUs />
-              </>
-            }
-          />
+          <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<Contact />} />
           <Route path="/auth-admin" element={<AuthAdmin />} />
           <Route path="/products/:productUrl" element={<Product />} />
           <Route path="/all-products" element={<AllProducts />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/blogs/:blogId" element={<GetBlog />} />
+          <Route path="/blogs/:blog_id" element={<GetBlog />} />
           <Route path="/checkout/:cart_id" element={<Checkout />} />
+          <Route path="/track-order/:orderNumber" element={<TrackOrder />} />
         </Routes>
         <Footer />
       </BrowserRouter>
