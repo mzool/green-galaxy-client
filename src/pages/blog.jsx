@@ -3,7 +3,7 @@ import LoadingSpinner from "../assets/loading";
 import { Link, useSearchParams } from "react-router-dom";
 function Blog() {
   /// search
-  let [search, setSearch] = useSearchParams({ page: 1, limit: 10, blogId: null});
+  let [search, setSearch] = useSearchParams({ page: 1, limit: 10, blog_id: null});
   ///  blogs
   let [allBlogs, setAllBlogs] = useState([]);
   /// get all blogs
@@ -16,6 +16,11 @@ function Blog() {
         mode: "cors",
         method: "get",
         credentials: "include",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
       }
     )
       .then((res) => res.json())
@@ -28,7 +33,7 @@ function Blog() {
     let page = JSON.parse(search.get("page"));
     let limit = JSON.parse(search.get("limit"));
 
-    setSearch({ page: page++, limit, blogId: "" });
+    setSearch({ page: page++, limit, blog_id: "" });
   }
   /// rendering
   if (allBlogs.length == 0) {

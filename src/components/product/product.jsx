@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../assets/loading";
@@ -7,6 +7,8 @@ import SameProcuts from "../same products/sameProducts";
 function Product() {
   /// navigate
   let navigate = useNavigate();
+  /// session expired when session expired=> user need to login or user will be consider as a guist
+  let [session, setSession] = useState(true);
   /// get the product url
   let { productUrl } = useParams();
   /// get the product data
@@ -78,6 +80,37 @@ function Product() {
       setNumOfItems(1);
     }
   }
+  /// delete cart cookie
+  function deleteCart() {
+    setIsFetching(true);
+    fetch(
+      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
+        import.meta.env.VITE_delete_cart
+      }`,
+      {
+        method: "DELETE",
+        mode: "cors",
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
+        body: JSON.stringify({
+          method: "cookie",
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setMsg("Thank you, you can add items as a guist now");
+          setSession(true);
+          setIsFetching(false);
+        }
+      });
+  }
   /// add to cart
   /// msgs
   let [msg, setMsg] = useState("");
@@ -116,6 +149,9 @@ function Product() {
           credentials: "include",
           headers: {
             "content-type": "application/json",
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
           },
           body: JSON.stringify({ items }),
         }
@@ -134,8 +170,9 @@ function Product() {
               setAdded(false);
             }, 10000);
           } else {
-            setMsg("Sorry, something went error, try again.");
-            setIsFetching(false)
+            setMsg(data.error);
+            setIsFetching(false);
+            setSession(false);
           }
         });
     } catch (err) {
@@ -293,19 +330,36 @@ function Product() {
                 className="w-full h-fit outline-0 border-2 border-zinc-200 rounded-lg text-center number-input"
               />
             </div>
-            <div className="w-full text-red-500 flex flex-col gap-4 mt-5">
-              {msg}
-            </div>
+            {msg && (
+              <div className="w-full text-red-500 flex flex-col gap-4 mt-5">
+                {msg}
+              </div>
+            )}
+            {!session && (
+              <div className="flex flex-col gap-2 w-full">
+                <Link
+                  to={"/login"}
+                  className="p-2 bg-green-500 text-white rounded-lg text-center w-3/6 hover:bg-opacity-80 transition duration-300"
+                >
+                  login
+                </Link>
+                <button
+                  disabled={isFetching}
+                  className="p-2 bg-teal-500 text-white rounded-lg w-3/6 hover:bg-opacity-80 transition duration-300"
+                  onClick={deleteCart}
+                >
+                  continue as a guist
+                </button>
+              </div>
+            )}
             <div className="flex flex-row gap-4 mt-8">
               <div>
                 <button
+                  disabled={isFetching}
                   onClick={addToCart}
                   className="p-4 w-fit h-fit rounded-lg border-2 border-zinc-200 text-md bg-green-600 text-white shadow-sm shadow-green-500 hover:scale-120 hover:shadow-lg hover:shadow-green-500 transition ease-in-out duration-300"
                 >
-                  {isFetching && (
-                    <div className="border-b-2 border-t-2 border-white animate-spin rounded-full w-10 h-10"></div>
-                  )}
-                  {!isFetching && "add to cart"}
+                  add to cart
                 </button>
               </div>
             </div>

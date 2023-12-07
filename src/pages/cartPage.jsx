@@ -24,18 +24,22 @@ function CartPage() {
         method: "get",
         mode: "cors",
         credentials: "include",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
       }
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data.cart.allCartProducts) {
+        if (data.success) {
           setCartId(data.cart.cart_id);
           setUserPicks(data.cart.allCartProducts);
-          setFetching(false);
         } else {
           setUserPicks([]);
-          setFetching(false);
         }
+        setFetching(false);
       });
   }, [itemDeleted]);
   //// remove item from cart
