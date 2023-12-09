@@ -4,10 +4,10 @@ function Comments() {
   /// get blog id
   const { blog_id } = useParams();
   /// style
-  let [style, setStyle] = useState({
+  let style= {
     inputs:
       "border-2 border-zinc-200 rounded-md p-2 outline-0 w-full hover:border-green-500 focus:border-green-500 transtion duration-300",
-  });
+  };
   /// variables
   let [formValues, setFormValues] = useState({
     username: "",
@@ -86,6 +86,9 @@ function Comments() {
         method: "get",
         mode: "cors",
         headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
           blog_id: blog_id,
         },
       }

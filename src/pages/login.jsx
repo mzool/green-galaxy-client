@@ -2,10 +2,13 @@ import { useFormik } from "formik";
 import { loginSchema } from "../validation/schemas";
 import { useContext, useEffect, useState } from "react";
 import theStore from "../store/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import LoadingSpinner from "../assets/loading";
 const LoginPage = () => {
+  /// navigate
   const navigate = useNavigate();
+  /// location
+  const location = useLocation();
   /// get the global store
   let store = useContext(theStore);
   /// do not return login component if the user is already logged in
@@ -13,27 +16,39 @@ const LoginPage = () => {
   /// get user info
   let [endFetch, setEndFetch] = useState(false);
   useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_get_user_info
-      }`,
-      {
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data._id) {
-          navigate("/profile");
-        } else {
-          setLogIn(true);
-          console.clear();
+    /// check store
+    if (store.store.user.id) {
+      navigate("/profile");
+    } else {
+      fetch(
+        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
+          import.meta.env.VITE_get_user_info
+        }`,
+        {
+          method: "GET",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
+          },
         }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data._id) {
+            store.store.updateUser(data);
+            location.state?.wanted
+              ? navigate(location.state.wanted)
+              : navigate("/profile");
+          } else {
+            setLogIn(true);
+          }
 
-        setEndFetch(true);
-      });
+          setEndFetch(true);
+        });
+    }
   }, []);
 
   /// handle form using formik
@@ -54,6 +69,9 @@ const LoginPage = () => {
           method: "post",
           cors: "cors",
           headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
             "content-type": "application/json",
           },
           credentials: "include",
@@ -68,7 +86,10 @@ const LoginPage = () => {
           if (data.error) {
             setErrMsg(data.error);
           } else {
-            navigate("/profile");
+            store.store.updateUser(data);
+            location.state?.wanted
+              ? navigate(location.state.wanted)
+              : navigate("/profile");
           }
         });
     },

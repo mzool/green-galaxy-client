@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../assets/loading";
+import theStore from "../store/store.js";
 function CartPage() {
+  /// get the store
+  const { store } = useContext(theStore);
   /// cart id
-  let [cart_id, setCartId] = useState("");
+  let [cart_id, setCartId] = useState(store.cart.cartId || "");
   /// user picks
-  let [userPicks, setUserPicks] = useState([]);
+  let [userPicks, setUserPicks] = useState(store.cart.userPicks || []);
   /// is fetching
   let [isFetching, setFetching] = useState(false);
   /// for rendering control
@@ -15,33 +18,43 @@ function CartPage() {
   let [msg, setMsg] = useState("");
   /// get cart items from server
   useEffect(() => {
-    setFetching(true);
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_get_cart
-      }`,
-      {
-        method: "get",
-        mode: "cors",
-        credentials: "include",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setCartId(data.cart.cart_id);
-          setUserPicks(data.cart.allCartProducts);
-        } else {
-          setUserPicks([]);
+    console.log(store.cart);
+    if (store.cart.userPicks?.length > 0) {
+      return
+    } else {
+      setFetching(true);
+      fetch(
+        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
+          import.meta.env.VITE_get_cart
+        }`,
+        {
+          method: "get",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
+          },
         }
-        setFetching(false);
-      });
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            store.updateCart({
+              cartId: data.cart.cart_id,
+              userPicks: data.cart.allCartProducts,
+            });
+            setCartId(data.cart.cart_id);
+            setUserPicks(data.cart.allCartProducts);
+          } else {
+            setUserPicks([]);
+          }
+          setFetching(false);
+        });
+    }
   }, [itemDeleted]);
+  console.log(userPicks, cart_id);
   //// remove item from cart
   ///////////////////////////////////////////////////// deleting variable for rendering control
   function removeItem(itemId, cartId) {
@@ -54,6 +67,9 @@ function CartPage() {
         method: "DELETE",
         mode: "cors",
         headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
           itemid: itemId,
           cartid: cartId,
         },
@@ -78,7 +94,7 @@ function CartPage() {
     return <LoadingSpinner color={"green-500"} />;
   }
   /// if no cart available
-  if (userPicks.length == 0) {
+  if (userPicks?.length == 0) {
     return (
       <div className="min-h-screen h-fit bg-white flex items-center justify-center flex-col gap-4 text-green-600">
         <div className="bg-zinc-100 p-2 rounded-lg flex flex-row flex-wrap gap-2">

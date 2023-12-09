@@ -3,16 +3,9 @@ import colors from "../../templates/colors.json";
 import { NavLink } from "react-router-dom";
 import theStore from "../../store/store";
 import profileImg from "../../assets/profileImg.svg";
-
 function Drawer() {
   /// get the globals
-  let store = useContext(theStore);
-  /// get if user login and store has user
-  let [userName, setUserName] = useState(store.store.user.name);
-  /// get userName info
-  useEffect(() => {
-    setUserName(store.store.user.name);
-  }, [store.store.user]);
+  let {store} = useContext(theStore);
   /// logout function
   let [loggingOut, setLoggingOut] = useState(false);
   function logout() {
@@ -25,6 +18,11 @@ function Drawer() {
         method: "get",
         mode: "cors",
         credentials: "include",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
       }
     )
       .then((res) => res.json())
@@ -43,10 +41,10 @@ function Drawer() {
     theList.current.classList.toggle("hidden");
   }
   /// style
-  let [linkClass, setLinkClass] = useState({
+  const linkClass = {
     style:
       "flex flex-row gap-1 justify-center items-center text-white hover:text-emerald-500 rounded p-1 transition duration-300 ease-in-out aria-[current=page]:m-3 aria-[current=page]:bg-black aria-[current=page]:bg-opacity-50 aria-[current=page]:text-white",
-  });
+  };
 
   return (
     <div
@@ -232,7 +230,7 @@ function Drawer() {
           </div>
           {/* auth links */}
           <div className="w-full flex flex-col gap-5 m-2 justify-center items-center">
-            {userName ? (
+            {store.user.name ? (
               <NavLink
                 to="/profile"
                 className="text-white hover:text-emerald-300 "
@@ -244,7 +242,7 @@ function Drawer() {
                     alt="green-galaxy-profile-img"
                     className="w-10 m-0"
                   />
-                  {userName}
+                  {store.user.name}
                 </div>
               </NavLink>
             ) : (
@@ -258,8 +256,9 @@ function Drawer() {
             )}
             {loggingOut ? (
               "loggingout..."
-            ) : userName ? (
+            ) : store.user.name ? (
               <button
+              disabled={loggingOut}
                 onClick={logout}
                 className="bg-red-600 text-white rounded-lg h-fit w-fit p-1 hover:bg-white hover:text-red-600"
               >

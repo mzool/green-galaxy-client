@@ -7,13 +7,7 @@ import search from "../../assets/search.svg";
 import Drawer from "./drawer"
 const Navbar = () => {
   /// get the globals
-  let store = useContext(theStore);
-  /// get if user login and store has user
-  let [userName, setUserName] = useState(store.store.user.name);
-  /// get userName info
-  useEffect(() => {
-    setUserName(store.store.user.name);
-  }, [store.store.user]);
+  let {store} = useContext(theStore);
   /// logout function
   let [loggingOut, setLoggingOut] = useState(false);
   function logout() {
@@ -26,6 +20,11 @@ const Navbar = () => {
         method: "get",
         mode: "cors",
         credentials: "include",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
       }
     )
       .then((res) => res.json())
@@ -35,10 +34,10 @@ const Navbar = () => {
       });
   }
   /// style
-  let [linkClass, setLinkClass] = useState({
+  const linkClass = {
     style:
       "text-white hover:text-emerald-300 text-sm transition duration-300 ease-in-out aria-[current=page]:underline",
-  });
+  };
   /// make the navbar responsive
   let [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
@@ -156,7 +155,7 @@ const Navbar = () => {
         </div>
         {/* Auth NavLinks */}
         <div className=" sm:mt-0 space-x-4 flex flex-row gap-1 justify-center items-center">
-          {userName ? (
+          {store.user.name? (
             <NavLink
               to="/profile"
               className="text-white hover:text-emerald-300 "
@@ -167,7 +166,7 @@ const Navbar = () => {
                   alt="green-galaxy-profile-img"
                   className="w-10 m-0"
                 />
-                {userName}
+                {store.user.name.slice(0,5)+"..."}
               </div>
             </NavLink>
           ) : (
@@ -180,7 +179,7 @@ const Navbar = () => {
           )}
           {loggingOut ? (
             "loggingout..."
-          ) : userName ? (
+          ) : store.user?.name ? (
             <button
               onClick={logout}
               className="bg-red-600 text-white rounded-lg h-fit w-fit p-2 hover:bg-white hover:text-red-600 transition ease-in-out duration-300"

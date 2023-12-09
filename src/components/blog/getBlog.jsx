@@ -22,6 +22,9 @@ function GetBlog() {
           method: "get",
           mode: "cors",
           headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
             blog_id: blog_id,
           },
         }

@@ -37,19 +37,23 @@ function AuthAdmin() {
         method: "GET",
         mode: "cors",
         credentials: "include",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
       }
     )
       .then((res) => res.json())
       .then((data) => {
         if (!data._id) {
-          navigate("/login");
+          navigate("/login", {state:{wanted:"/auth-admin"}});
         } else {
           /// if user is confirmed email
           if (data.confirm_email === true) {
-            /// use session for rendering purpos
             setUser(true);
           } else {
-            navigate("/profile");
+            navigate("/profile", {state:{wanted:"/auth-admin"}});
           }
           /// if admin is authenticated before
           fetch(
@@ -60,6 +64,11 @@ function AuthAdmin() {
               method: "get",
               mode: "cors",
               credentials: "include",
+              headers: {
+                Authorization: `GreenBearer ${
+                  import.meta.env.VITE_authorization_token
+                }`,
+              },
             }
           )
             .then((res) => res.json())
@@ -69,7 +78,7 @@ function AuthAdmin() {
                 setSession(true);
                 setAdmin(true);
               } else {
-                setFetch(true)
+                setFetch(true);
                 /// auth admin
                 fetch(
                   `${import.meta.env.VITE_domain}${
@@ -79,12 +88,17 @@ function AuthAdmin() {
                     method: "get",
                     mode: "cors",
                     credentials: "include",
+                    headers: {
+                      Authorization: `GreenBearer ${
+                        import.meta.env.VITE_authorization_token
+                      }`,
+                    },
                   }
                 )
                   .then((res) => res.json())
                   .then((data) => {
                     if (data.success && data.permessions) {
-                      setFetch(false)
+                      setFetch(false);
                       setAdmin(true);
                     } else {
                       setOtp({});
@@ -121,6 +135,9 @@ function AuthAdmin() {
           mode: "cors",
           credentials: "include",
           headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
             "content-type": "application/json",
           },
           body: JSON.stringify({ otp: _OTP.trim() }),
