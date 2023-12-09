@@ -45,38 +45,46 @@ function Contact() {
               import.meta.env.VITE_contact_us
             }`,
             {
-              method:"post",
-              mode:"cors",
-              credentials:"include",
-              headers:{
-                "content-type":"application/json"
+              method: "post",
+              mode: "cors",
+              credentials: "include",
+              headers: {
+                Authorization: `GreenBearer ${
+                  import.meta.env.VITE_authorization_token
+                }`,
+                "content-type": "application/json",
               },
-              body: JSON.stringify(formData)
+              body: JSON.stringify(formData),
             }
-          ).then((res)=>res.json()).then((data)=>{
-            if (data.message === "Validation error"){
-              setIsFetching(false);
-              setMsgs({msg:"", err:"please follow the instructions when filling the inputs."});
-            }else{
-              setIsFetching(false);
-              setMsgs({err:"", msg:data.message});
-              setFormData({
-                name:"",
-                email:"",
-                phone:"",
-                message:""
-              });
-              setTimeout(()=>{
-                setMsgs({msg:"", err:""})
-              }, 10000)
-            }
-          })
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.message === "Validation error") {
+                setIsFetching(false);
+                setMsgs({
+                  msg: "",
+                  err: "please follow the instructions when filling the inputs.",
+                });
+              } else {
+                setIsFetching(false);
+                setMsgs({ err: "", msg: data.message });
+                setFormData({
+                  name: "",
+                  email: "",
+                  phone: "",
+                  message: "",
+                });
+                setTimeout(() => {
+                  setMsgs({ msg: "", err: "" });
+                }, 10000);
+              }
+            });
         }
       });
   }
 
   /// style
-  let [style, setStyle] = useState({
+  let style = {
     parent: "flex flex-col h-fit w-full p-5",
     form: `flex flex-col h-fit place-self-center bg-${colors.mainBackgroundColor} text-${colors.mainTextColor} m-2 flex flex-col gap-5 p-5 w-fll md:w-3/6 h-full rounded border-2 border-zinc-200 shadow-lg shadow-green-600`,
     label: "block text-lg font-medium leading-6 text-gray-900",
@@ -85,7 +93,7 @@ function Contact() {
     textarea:
       "overflow-x-hidden whitespace-pre-wrap resize-none w-full h-full rounded-md border-2 border-gray-500 focus:border-green-600 outline-0 p-3 text-gray-900 sm:text-sm sm:leading-6",
     btn: "bg-green-600 rounded text-white text-xl p-2 hover:bg-green-500 w-full transition ease-in-out duration-300",
-  });
+  };
   /// rendering
   
   return (

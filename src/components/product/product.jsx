@@ -23,6 +23,9 @@ function Product() {
         mode: "cors",
         credentials: "include",
         headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
           productId: productUrl,
         },
       }

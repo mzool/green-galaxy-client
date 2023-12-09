@@ -29,6 +29,11 @@ function Checkout() {
       {
         method: "GET",
         mode: "cors",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
       }
     )
       .then((res) => res.json())
@@ -42,6 +47,11 @@ function Checkout() {
               method: "get",
               mode: "cors",
               credentials: "include",
+              headers: {
+                Authorization: `GreenBearer ${
+                  import.meta.env.VITE_authorization_token
+                }`,
+              },
             }
           )
             .then((res) => res.json())
@@ -88,6 +98,9 @@ function Checkout() {
           method: "post",
           mode: "cors",
           headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
             "content-type": "apllication/json",
           },
           body: JSON.stringify({ discountCode }),

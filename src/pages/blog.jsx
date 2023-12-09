@@ -1,33 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import LoadingSpinner from "../assets/loading";
 import { Link, useSearchParams } from "react-router-dom";
+import theStore from "../store/store.js";
 function Blog() {
+  /// store
+  const { store } = useContext(theStore);
   /// search
-  let [search, setSearch] = useSearchParams({ page: 1, limit: 10, blog_id: null});
-  ///  blogs
-  let [allBlogs, setAllBlogs] = useState([]);
+  let [search, setSearch] = useSearchParams({
+    page: 1,
+    limit: 10,
+    blog_id: null,
+  });
   /// get all blogs
   useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_get_all_blogs
-      }`,
-      {
-        mode: "cors",
-        method: "get",
-        credentials: "include",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setAllBlogs(data.data);
-      });
-  }, []);
+    if (store.blogs.length==0){
+      fetch(
+        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
+          import.meta.env.VITE_get_all_blogs
+        }`,
+        {
+          mode: "cors",
+          method: "get",
+          credentials: "include",
+          headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            store.updateBlogs(data.data);
+          } else {
+            throw new Error("There are no blogs now, try again in future.");
+          }
+        });
+    }
+  }, [store]);
   /// more Blogs
   function moreBlogs() {
     let page = JSON.parse(search.get("page"));
@@ -36,13 +47,13 @@ function Blog() {
     setSearch({ page: page++, limit, blog_id: "" });
   }
   /// rendering
-  if (allBlogs.length == 0) {
+  if (store.blogs.length == 0) {
     return <LoadingSpinner color={"green-600"} />;
   }
   return (
     <div className="grid grid-rows gap-2 justify-center items-center">
       <div className="h-fit min-h-screen bg-white p-4 grid grid-cols-3 gap-10 w-full items-center justify-center">
-        {allBlogs.map((blog, index) => {
+        {store.blogs.map((blog, index) => {
           return (
             <Link
               to={`/blogs/${blog.blog_id}`}
@@ -60,7 +71,7 @@ function Blog() {
                 <h2>{blog.title}</h2>
               </div>
               <div>
-                <p>{blog.body.substring(0, 200) + "... "}</p>
+                <p>{blog.body.substring(0, blog.body.indexOf(".")) + "... "}</p>
               </div>
             </Link>
           );

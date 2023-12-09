@@ -79,6 +79,9 @@ function EditProduct(props) {
         method: "put",
         mode: "cors",
         credentials: "include",
+        headers:{ Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`},
         body: formData,
       }
     )
@@ -86,7 +89,7 @@ function EditProduct(props) {
       .then((data) => console.log(data));
   }
   /// style
-  let [style, setStyle] = useState({
+  let style = {
     container:
       "h-fit min-h-screen w-full bg-white p-4 flex justify-center text-center flex flex-col border-2 border-zinc-200 rounded-lg gap-4",
     form: "flex flex-col gap-2  w-full h-fit p-4 items-center justify-start",
@@ -103,7 +106,7 @@ function EditProduct(props) {
       "text-red-500 bg-zinc-50 rounded-md p-4 w-full h-fit shadow-lg shadow-red-500 border-2 border-white",
     instructionsDiv:
       "text-green-700 bg-zinc-50 rounded-md p-4 w-full h-fit shadow-lg shadow-gray-500 border-2 border-white mb-10",
-  });
+  };
 
   //// rendering
   return (

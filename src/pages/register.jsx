@@ -1,11 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { validationSchema } from "../validation/schemas";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import dots from "../assets/dots.svg";
 import LoadingSpinner from "../assets/loading";
 import colors from "../templates/colors.json";
+//import theStore from "../store/store.js";
 const RegisterPage = () => {
+  /// store
+ // let {store} = useContext(theStore);
   /// navigate
   let navigate = useNavigate();
   /// get user info
@@ -19,6 +22,11 @@ const RegisterPage = () => {
         method: "GET",
         mode: "cors",
         credentials: "include",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
       }
     )
       .then((res) => res.json())
@@ -27,7 +35,6 @@ const RegisterPage = () => {
           navigate("/profile");
         } else {
           setFetch(false);
-          console.clear();
         }
       });
   }, []);
@@ -45,6 +52,9 @@ const RegisterPage = () => {
         method: "post",
         cors: "cors",
         headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
           "content-type": "application/json",
         },
         body: JSON.stringify(values),
@@ -63,10 +73,10 @@ const RegisterPage = () => {
       });
   };
   //// style
-  let [style, setStyle] = useState({
+  const style = {
     field:
       "w-full p-2 outline-0 border border-zinc-200 shadow-green-200 shadow-sm focus:border-2 focus:border-green-500 hover:shadow-lg hover:shadow-green-500 rounded-md transition ease-in-out duration-300",
-  });
+  };
   /// loader
   if (isFetch) {
     return <LoadingSpinner color={"green-500"} />;
@@ -104,11 +114,7 @@ const RegisterPage = () => {
 
               <div className="mb-4">
                 <label htmlFor="email">Email</label>
-                <Field
-                  type="email"
-                  name="email"
-                 className={style.field}
-                />
+                <Field type="email" name="email" className={style.field} />
                 <ErrorMessage
                   name="email"
                   component="div"

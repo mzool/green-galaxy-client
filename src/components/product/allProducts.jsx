@@ -5,17 +5,14 @@ import { useSearchParams } from "react-router-dom";
 import theStore from "../../store/store";
 function AllProducts() {
   /// the store
-  let store = useContext(theStore);
+  let {store} = useContext(theStore);
   /// search params
   let [searchParams, setSearchParams] = useSearchParams({ page: 1, limit: 20 });
-
-  /// all product variable
-  let [allProduct, setAllProduct] = useState([]);
   /// fetch all product api
   let [startFetching, setStartFetching] = useState(false);
   useEffect(() => {
-    const credentials = btoa("greengalaxy:apipasswordgreengalaxy");
-    setStartFetching(true);
+    if (store.products.length==0)
+   { setStartFetching(true);
     /// fetch
     fetch(
       `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
@@ -27,21 +24,23 @@ function AllProducts() {
         method: "GET",
         mode: "cors",
         headers: {
-          Authorization: credentials,
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
         },
       }
     )
       .then((res) => res.json())
       .then((data) => {
         if (data.success === true && data.data.length > 0) {
-          setAllProduct(data.data);
-          store.store.updateProducts(data.data);
+          store.updateProducts(data.data);
         } else {
-          setAllProduct([]);
+          throw new Error("no products available now.")
         }
         setStartFetching(false);
-      });
-  }, [searchParams]);
+      })}
+  }, [searchParams, store]);
+  console.log(store.products);
   /// page control
   function increase() {
     setSearchParams({
@@ -68,11 +67,11 @@ function AllProducts() {
     console.log(filter);
   }
   /// when start fetching
-  if (startFetching && allProduct.length === 0) {
+  if (startFetching && store.products.length === 0) {
     return <LoadingSpinner color={"green-600"} />;
   }
   /// if no products found
-  if (allProduct.length === 0 && startFetching === false) {
+  if (store.products.length === 0 && startFetching === false) {
     return (
       <div className="text-green-500 flex flex-col h-screen justify-center items-center text-2xl bg-white w-full h-fit">
         <svg
@@ -172,7 +171,7 @@ function AllProducts() {
       </div>
       {/* all products  ********************************************************************************************************8*/}
       <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 p-5 gap-5 w-full h-fit justify-center items-center">
-        {allProduct.map((product) => {
+        {store.products.map((product) => {
           return (
             <ProductCard
               key={product.productId}

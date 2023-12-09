@@ -2,7 +2,7 @@ import heroImagTrees from "../../assets/heroImagTrees.png";
 const HeroImage = () => {
   return (
     <div
-      className="rounded-md h-96 w-full mb-1 mt-1 p-0"
+      className="h-screen w-full p-0"
       style={{
         backgroundImage: `url(${heroImagTrees})`,
         backgroundRepeat: "no-repeat",

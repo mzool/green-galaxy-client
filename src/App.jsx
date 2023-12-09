@@ -35,20 +35,31 @@ function App() {
   let [store, setStore] = useState({
     user: {},
     updateUser: (newData) => {
-      setStore({ ...store, user: newData });
+      setStore((prevStore) => ({ ...prevStore, user: newData }));
     },
-    products: {},
-    updateProducts: (newProducts) => {
-      setStore({ ...store, products: newProducts });
+    products: [],
+    updateProducts: (productsArr) => {
+      setStore((prevStore) => ({
+        ...prevStore,
+        products: [...prevStore.products, ...productsArr],
+      }));
     },
-    // cart: [{}],
-    // updateCart: (item) => {
-    //  setStore((prevStore) => ({
-    //    ...prevStore,
-    //    cart: [...prevStore.cart, item],
-    //  }));
-    // },
+    cart: {},
+    updateCart: (item) => {
+      setStore((prevStore) => ({
+        ...prevStore,
+        cart: { cartId: item.cartId, userPicks: item.userPicks },
+      }));
+    },
+    blogs: [],
+    updateBlogs: (item) => {
+      setStore((prevStore) => ({
+        ...prevStore,
+        blogs: [...prevStore.blogs, ...item],
+      }));
+    },
   });
+
   return (
     <theStore.Provider value={{ store, setStore }}>
       <BrowserRouter>
@@ -69,7 +80,7 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blogs/:blog_id" element={<GetBlog />} />
           <Route path="/checkout/:cart_id" element={<Checkout />} />
-          <Route path="/track-order/:orderNumber" element={<TrackOrder />} />
+          <Route path="/track-order" element={<TrackOrder />} />
         </Routes>
         <Footer />
       </BrowserRouter>

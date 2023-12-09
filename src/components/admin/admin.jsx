@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import AdminProducts from "./adminComponents/products/admin_product";
 import MianBlogDashboard from "./adminComponents/blog/mainBlog";
+import AdminSettings from "./adminComponents/admin-settings/adminSettings";
 function Admin() {
   /// set search params
   let [page, setPage] = useSearchParams();
@@ -11,11 +12,11 @@ function Admin() {
     setCurrentPage(page.get("page"));
   }, [page]);
   /// style
-  let [style, setStyle] = useState({
+  const style = {
     btn: "w-full h-fit flex flex-row gap-2 p-3",
     innerDiv:
       "w-full border-b-4 border-white hover:bg-green-100 hover:text-green-900 flex items-center translate ease-in-out duration-300 justify-center flex-row gap-2",
-  });
+  };
   return (
     <div className="h-fit min-h-screen w-full bg-white flex flex-row m-0 p-t-2 gap-4 place-self-center justify-self-center">
       <div className="bg-green-900 text-white relative h-fit text-xs sm:text-sm md:text-base w-16 sm:w-20 md:w-32 lg:w-32 flex flex-col mt-4">
@@ -260,13 +261,13 @@ function Admin() {
         {currentPage === "products" && <AdminProducts />}
         {currentPage === "orders" && <>orders</>}{" "}
         {currentPage === "employees" && <>emoployees</>}
-        {currentPage === "settings" && <>settings</>}
+        {currentPage === "settings" && <AdminSettings />}
         {currentPage === "users" && <>users</>}
         {currentPage === "returns" && <>returns</>}
         {currentPage === "dashboard" && <>dashboard</>}
         {currentPage === "inventory" && <>inventory</>}
         {currentPage === "marketing" && <>markiting</>}
-        {currentPage === "blog" && <MianBlogDashboard/>}
+        {currentPage === "blog" && <MianBlogDashboard />}
       </div>
     </div>
   );

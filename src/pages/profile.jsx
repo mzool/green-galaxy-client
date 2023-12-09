@@ -1,9 +1,13 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import theStore from "../store/store";
 import LoadingSpinner from "../assets/loading";
-import ConfirmEmail from "../components/auth/confirmEmail"
+import ConfirmEmail from "../components/auth/confirmEmail";
 const ProfilePage = () => {
+  /// get state
+  const location = useLocation();
+  const state = location.state;
+  /// navigate
   const navigate = useNavigate();
   /// get the global store
   let store = useContext(theStore);
@@ -13,32 +17,40 @@ const ProfilePage = () => {
   let [confirmed, setConfirmed] = useState(true);
   /// get user info
   useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_get_user_info
-      }`,
-      {
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
+    if (store.store.user._id) {
+      setConfirmed(store.store.user.confirm_email);
+      if (confirmed) {
+        setProfilePage(true);
       }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data._id) {
-          navigate("/login");
-        } else {
-          setConfirmed(data.confirm_email);
-          if (data.confirm_email) {
-            setProfilePage(true);
-          } else {
-            setConfirmed(false);
-          }
+    } else
+      fetch(
+        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
+          import.meta.env.VITE_get_user_info
+        }`,
+        {
+          method: "GET",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            Authorization: `GreenBearer ${
+              import.meta.env.VITE_authorization_token
+            }`,
+          },
         }
-        console.clear();
-        store.store.updateUser(data);
-      });
-  }, [navigate]);
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data._id) {
+            navigate("/login", { state: { ...state, prv: "/profile" } });
+          } else {
+            setConfirmed(data.confirm_email);
+            if (data.confirm_email) {
+              setProfilePage(true);
+            }
+          }
+          store.store.updateUser(data);
+        });
+  }, []);
 
   //// rendering
   if (profilePage && confirmed) {
@@ -69,8 +81,8 @@ const ProfilePage = () => {
         </div>
       </div>
     );
-  } else if (confirmed === false){
-return <ConfirmEmail/>
+  } else if (confirmed === false) {
+    return <ConfirmEmail />;
   } else {
     return <LoadingSpinner color={"green-500"} />;
   }

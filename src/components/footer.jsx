@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import colors from "../templates/colors.json";
 import { useState } from "react";
 import { subscribeSchema } from "../validation/schemas";
-import * as Yup from "yup";
+
 const Footer = () => {
   /// handle subscribes
   let [email, setEmail] = useState("");
@@ -16,7 +16,7 @@ const Footer = () => {
     e.preventDefault();
     /// validation
     subscribeSchema.validateSync({ email });
-   
+
     fetch(
       `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
         import.meta.env.VITE_newSubscribe
@@ -26,6 +26,9 @@ const Footer = () => {
         mode: "cors",
         credentials: "include",
         headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
           "content-type": "application/json",
         },
         body: JSON.stringify({ email }),

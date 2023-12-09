@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
-import colors from "../../templates/colors.json";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import cookie from "../../functions/cookies.js";
 function ProductCard({ title, price, imageUrl, productLink }) {
   /// get params and return the specific product
   let { productUrl } = useParams();

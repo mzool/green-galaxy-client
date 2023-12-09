@@ -36,6 +36,11 @@ function AddBlog() {
         method: "post",
         mode: "cors",
         credentials: "include",
+        headers: {
+          Authorization: `GreenBearer ${
+            import.meta.env.VITE_authorization_token
+          }`,
+        },
         body: form_data,
       }
     )
