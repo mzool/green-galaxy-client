@@ -3,6 +3,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import theStore from "../store/store";
 import LoadingSpinner from "../assets/loading";
 import ConfirmEmail from "../components/auth/confirmEmail";
+import ProfileImag from "../assets/profileImag";
+import Addressbook from "../assets/addressBook";
+import LoveHeart from "../assets/loveHeart";
+import Shield from "../assets/shield";
+import List from "../assets/list";
+import Chat from "../assets/chat";
+import Sun from "../assets/sun";
+import ProfilePageContents from "../components/profile page components/ProfilePageContents";
 const ProfilePage = () => {
   /// get state
   const location = useLocation();
@@ -51,33 +59,81 @@ const ProfilePage = () => {
           store.store.updateUser(data);
         });
   }, []);
-
+  /// section to render
+  const [section, setSection] = useState("personalInfo");
+  //// style
+  const style = {
+    sideBar:
+      " bg-gray-100 p-4 rounded-lg shadow-lg sm:col-span-1 h-fit flex flex-col gap-2",
+    sideBarContents:
+      "w-full h-fit p-2 flex flex-row gap-4 rounded-lg items-center justify-start  text-black transition duration-300 cursor-pointer hover:bg-gray-200",
+  };
   //// rendering
   if (profilePage && confirmed) {
     return (
-      <div className="bg-gray-100 min-h-screen p-4">
-        <div className="max-w-screen-md mx-auto bg-white p-6 rounded shadow-md">
-          <h1 className="text-3xl font-semibold mb-4">Profile Page</h1>
-
-          {/* Settings Section */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Settings</h2>
-            {/* Add your settings content here */}
-          </section>
-
-          {/* Personal Information Section */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">
-              Personal Information
-            </h2>
-            {/* Add your personal information content here */}
-          </section>
-
-          {/* Dashboard Section */}
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">Dashboard</h2>
-            {/* Add your dashboard content here */}
-          </section>
+      <div className="bg-white h-screen grid sm:grid-cols-4 grid-rows-2 gap-4">
+        {/* side bar */}
+        <div className={style.sideBar}>
+          {/* personal information with update functions*/}
+          <div
+            className={style.sideBarContents}
+            onClick={() => setSection("personalInfo")}
+          >
+            <ProfileImag color={"black"} />
+            <h2>my profile</h2>
+          </div>
+          {/* orders */}
+          <div
+            className={style.sideBarContents}
+            onClick={() => setSection("allUserOrders")}
+          >
+            <List color={"black"} />
+            <h2>mu orders</h2>
+          </div>
+          {/* address book */}
+          <div
+            className={style.sideBarContents}
+            onClick={() => setSection("addressBook")}
+          >
+            <Addressbook color={"black"} />
+            address book
+          </div>
+          {/* wish list */}
+          <div
+            className={style.sideBarContents}
+            onClick={() => setSection("wishList")}
+          >
+            <LoveHeart color={"red"} />
+            <h2>wish list</h2>
+          </div>
+          {/* security */}
+          <div
+            className={style.sideBarContents}
+            onClick={() => setSection("security")}
+          >
+            <Shield color={"blue"} />
+            <h2>security</h2>
+          </div>
+          {/* theme selection */}
+          <div
+            className={style.sideBarContents}
+            onClick={() => setSection("theme")}
+          >
+            <Sun color={"orange"} />
+            <h2>theme</h2>
+          </div>
+          {/* chat with us */}
+          <div
+            className={style.sideBarContents}
+            onClick={() => setSection("chat")}
+          >
+            <Chat color={"green"} />
+            <h2>chat with us</h2>
+          </div>
+        </div>
+        {/* content */}
+        <div className="bg-white sm:col-span-3">
+          <ProfilePageContents section={section} />
         </div>
       </div>
     );

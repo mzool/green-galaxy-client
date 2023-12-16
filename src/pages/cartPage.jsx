@@ -2,99 +2,30 @@ import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../assets/loading";
 import theStore from "../store/store.js";
+import GetCart from "../functions/getCart.js";
+import removeItem from "../functions/removeItemFromCart.js";
 function CartPage() {
   /// get the store
   const { store } = useContext(theStore);
-  /// cart id
-  let [cart_id, setCartId] = useState(store.cart.cartId || "");
-  /// user picks
-  let [userPicks, setUserPicks] = useState(store.cart.userPicks || []);
   /// is fetching
   let [isFetching, setFetching] = useState(false);
-  /// for rendering control
-  /// item deleted to update page after delete item
-  let [itemDeleted, setItemDeleted] = useState(0);
   /// msg
   let [msg, setMsg] = useState("");
   /// get cart items from server
   useEffect(() => {
-    console.log(store.cart);
     if (store.cart.userPicks?.length > 0) {
-      return
+      return;
     } else {
       setFetching(true);
-      fetch(
-        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-          import.meta.env.VITE_get_cart
-        }`,
-        {
-          method: "get",
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            store.updateCart({
-              cartId: data.cart.cart_id,
-              userPicks: data.cart.allCartProducts,
-            });
-            setCartId(data.cart.cart_id);
-            setUserPicks(data.cart.allCartProducts);
-          } else {
-            setUserPicks([]);
-          }
-          setFetching(false);
-        });
+      GetCart(store).then(() => setFetching(false));
     }
-  }, [itemDeleted]);
-  console.log(userPicks, cart_id);
-  //// remove item from cart
-  ///////////////////////////////////////////////////// deleting variable for rendering control
-  function removeItem(itemId, cartId) {
-    setMsg("updating your cart ...");
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_delete_cart_item
-      }`,
-      {
-        method: "DELETE",
-        mode: "cors",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-          itemid: itemId,
-          cartid: cartId,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) {
-          setMsg("somthing wrong, try again later");
-          return;
-        }
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        setItemDeleted((pr) => pr + 1);
-        setMsg("");
-      });
-  }
+  }, []);
   /// if is fetching
   if (isFetching) {
     return <LoadingSpinner color={"green-500"} />;
   }
   /// if no cart available
-  if (userPicks?.length == 0) {
+  if (store.cart.userPicks?.length == 0 || !store.cart.userPicks) {
     return (
       <div className="min-h-screen h-fit bg-white flex items-center justify-center flex-col gap-4 text-green-600">
         <div className="bg-zinc-100 p-2 rounded-lg flex flex-row flex-wrap gap-2">
@@ -139,31 +70,40 @@ function CartPage() {
         </Link>
       </div>
     );
-  }
-  /// rendering
-  return (
-    <div className="h-fit min-h-screen w-full p-4 flex flex-col gap-4 items-center justify-center">
-      {/* message */}
-      {msg && (
-        <div className="w-full p-2 bg-gradient-to-r from-green-400 to-green-600 rounded-md text-white flex flex-col items-center justify-center">
-          {msg}
+  } else ////////////////////////////////////////////////////////////
+    return (
+      <div className="h-fit min-h-screen w-full px-10 py-4 flex flex-col gap-4 items-center justify-center">
+        {/* message */}
+        {msg && (
+          <div className="w-full p-2 bg-gradient-to-r from-green-400 to-green-600 rounded-md text-white flex flex-col items-center justify-center">
+            {msg}
+          </div>
+        )}
+        {/* title */}
+        <div className="bg-gray-100 rounded-lg p-2 w-full text-center text-2xl font-bold text-gray-600">
+          <h1>
+            Your Cart ({store.cart.userPicks.length}
+            {store.cart.userPicks.length>1?" items":" item"})
+          </h1>
         </div>
-      )}
-      {userPicks.map((pk, index) => {
-        return (
-          <div
-            key={index}
-            // make it responsive
-            className="bg-gradient-to-r from-gray-600 to-teal-900 p-4 text-white rounded-lg w-4/6 h-fit"
-          >
-            {/* product information */}
-            <div className="grid grid-cols-6 gap-2 justify-start h-24 p-2 items-center">
+        {store.cart.userPicks.map((pk, index) => {
+          return (
+            <div
+              key={index}
+              // make it responsive
+              className="bg-gradient-to-r from-green-900 to-green-600 p-4 text-white rounded-lg w-full h-fit items-center justify-center sm:grid sm:grid-cols-6 gap-2 flex flex-col flex-wrap"
+            >
+              {/* product information */}
               {/* image */}
-              <Link to={`../products/${pk.id}`} className="w-full">
-                <img src={pk.image} alt={pk.name} className="rounded-lg w-20" />
+              <Link to={`../products/${pk.id}`} className="w-full h-full">
+                <img
+                  src={pk.image}
+                  alt={pk.name}
+                  className="rounded-lg w-full h-full "
+                />
               </Link>
               {/* name and stock*/}
-              <div className="flex flex-col gap-2 items-center justify-center">
+              <div className="flex flex-col sm:gap-6 items-center justify-center">
                 <div> {pk.name}</div>
                 <div>
                   {pk.stock > 0 ? (
@@ -176,7 +116,7 @@ function CartPage() {
               {/* user picks */}
               <div className="flex flex-col gap-2 justify-center items-center">
                 <div>
-                  <h2>varients you picked:</h2>
+                  <h2>varients:</h2>
                 </div>
                 {pk.color && (
                   <div className="flex flex-row gap-2">
@@ -216,7 +156,13 @@ function CartPage() {
                 <button
                   className="w-full h-fit p-2 flex items-center justify-center hover:bg-red-100 transition duration-300 rounded-lg"
                   onClick={() => {
-                    removeItem(pk.itemId, cart_id);
+                    removeItem(
+                      pk.itemId,
+                      store.cart.cartId,
+                      setMsg,
+                      GetCart,
+                      store
+                    );
                   }}
                 >
                   <svg
@@ -236,20 +182,19 @@ function CartPage() {
                 </button>
               </div>
             </div>
-          </div>
-        );
-      })}
-      {/* total and order page*/}
-      <div className="w-full h-fit text-green-600 bg-zinc-100 rounded p-4 flex ">
-        <Link to={`/checkout/${cart_id}`}>
-          <button className="p-2 rounded-md bg-teal-500 text-white hover:bg-teal-600 transition duration-300 float-right">
-            complete order
-          </button>
-        </Link>
+          );
+        })}
+        {/* total and order page*/}
+        <div className="w-full h-fit text-gray-600 bg-gray-100 rounded p-4 flex ">
+          <Link to={`/checkout/${store.cart.cartId}`}>
+            <button className="py-2 px-4 rounded-md bg-gray-600 text-white hover:bg-gray-500 transition duration-300">
+              checkout
+            </button>
+          </Link>
+        </div>
+        {/* other items maybe you like */}
       </div>
-      {/* other items maybe you like */}
-    </div>
-  );
+    );
 }
 
 export default CartPage;

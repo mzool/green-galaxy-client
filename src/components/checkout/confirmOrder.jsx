@@ -54,7 +54,7 @@ function ConfirmOrder(props) {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            setMessage({ err: "", msg: data.message });
+            setMessage({ err: "", msg: `${data.message}, now we are redirecting you to home page.` });
           } else {
             setMessage({
               err: data.error,
@@ -64,8 +64,8 @@ function ConfirmOrder(props) {
           setFetching(false);
           setCompleted(true);
           setTimeout(() => {
-            navigate(`/track-order/${data.orderNumber}`);
-          }, 10000);
+           window.location.href = "/"
+          }, 5000);
         });
     } else {
       console.log("paypal");
@@ -73,7 +73,7 @@ function ConfirmOrder(props) {
   }
   ///////////////////////// rendering
   return (
-    <div className="flex flex-col gap-2 bg-white p-4 justify-start text-zinc-800 rounded-lg w-full h-fit border-2 border-zinc-500">
+    <div className="flex flex-col gap-2 bg-white p-4 justify-start text-gray-600 rounded-lg w-full h-fit border-2 border-zinc-500">
       {/* confirm your order */}
       <div className="place-self-center">
         <h2>Confirm your order Information </h2>
@@ -141,7 +141,7 @@ function ConfirmOrder(props) {
       <div>
         {!completed && !isFetching && (
           <button
-            className="p-2 rounded-lg bg-teal-600 text-white border-2 border-white hover:border-green-500 transition duration-300 m-2 px-6"
+            className="p-2 rounded-lg bg-teal-600 text-white border-2 border-white hover:border-gray-500 transition duration-300 m-2 px-6"
             onClick={handleCheckout}
             disabled={completed}
           >

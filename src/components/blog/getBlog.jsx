@@ -54,9 +54,9 @@ function GetBlog() {
     return <LoadingSpinner color={"green-500"} />;
   }
   return (
-    <div className="h-fit min-h-screen w-full p-4 bg-white w-full flex flex-col gap-4  text-green-700 text-start">
+    <div className="h-fit min-h-screen w-full px-4 bg-white w-full flex flex-col gap-4  text-gray-700 text-start">
       {/* image */}
-      <div className="w-full h-96 ">
+      <div className="w-full h-96 p-4">
         <img
           src={blog.imageURL}
           alt={blog.title}
@@ -64,12 +64,18 @@ function GetBlog() {
         />
       </div>
       {/* title */}
-      <div className="flex w-full text-center">
-        <h1 className="text-2xl w-full">{blog.title}</h1>
+      <div className="sm:px-10 w-full">
+        <h1 className="text-2xl w-full font-bold">{blog.title}</h1>
       </div>
       {/* body */}
-      <div className="w-full flex items-center justify-center">
-        {<p className="w-4/6">{blog.body}</p>}
+      <div className="sm:w-5/6 flex items-start flex-col sm:p-10">
+        {blog.body.split(".").map((p, ind)=>{
+          return (
+            <div key={ind}>
+              <p>{p +"."}</p>
+            </div>
+          );
+        })}
       </div>
       {/* comments */}
       <Comments/>

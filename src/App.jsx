@@ -28,7 +28,8 @@ import GetBlog from "./components/blog/getBlog";
 import Checkout from "./pages/checkout";
 //// track order
 import TrackOrder from "./pages/trackOrder";
-
+/// search result
+import SearchResult from "./components/search/searchResult";
 //////////////////////
 function App() {
   /// context api for global store
@@ -81,6 +82,7 @@ function App() {
           <Route path="/blogs/:blog_id" element={<GetBlog />} />
           <Route path="/checkout/:cart_id" element={<Checkout />} />
           <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/search" element={<SearchResult />} />
         </Routes>
         <Footer />
       </BrowserRouter>

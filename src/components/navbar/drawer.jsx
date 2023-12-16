@@ -1,11 +1,15 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useContext } from "react";
 import colors from "../../templates/colors.json";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import theStore from "../../store/store";
 import profileImg from "../../assets/profileImg.svg";
 function Drawer() {
+  /// navigate
+  const navigate = useNavigate();
   /// get the globals
   let {store} = useContext(theStore);
+  /// search
+  let [search, setSearch] = useState("");
   /// logout function
   let [loggingOut, setLoggingOut] = useState(false);
   function logout() {
@@ -94,7 +98,7 @@ function Drawer() {
         </button>
         <div
           ref={theList}
-          className="hidden absolute  flex flex-col inset-0 top-20 mt-5 bg-green-600 bg-opacity-60 w-full h-fit text-green-900 justify-center items-center p-4 z-10 shadow-lg shadow-green-500 border border-2 border-white rounded-md"
+          className="hidden absolute flex flex-col inset-0 top-20 mt-5 bg-green-600  w-full h-fit text-green-900 justify-center items-center p-4 z-10 shadow-lg shadow-green-500 border border-2 border-white rounded-md"
         >
           <div className="close w-full flex justify-start items-center">
             <button
@@ -184,10 +188,15 @@ function Drawer() {
                 id="search"
                 type="text"
                 className="p-1 rounded-lg outline-none flex-1 w-full mb-2 "
+                value={search}
+                onChange={(e)=>setSearch(e.target.value)}
               />
             </div>
             <div className="flex justify-center items-center mt-1">
-              <label htmlFor="search" className="w-1/6">
+              <label htmlFor="search" className="w-1/6" onClick={()=>{
+                controlList()
+                navigate(`/search?searchFor=${search}`)
+              }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -207,6 +216,7 @@ function Drawer() {
           </div>
           {/* cart */}
           <div className="w-full flex justify-center items-center">
+            {store.cart.userPicks && <p className="h-2 w-2 p-2 rounded-full bg-white flex items-center justify-center absolute">{store.cart.userPicks.length}</p>}
             <NavLink
               to="/cart"
               className={linkClass.style}
@@ -218,7 +228,7 @@ function Drawer() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="white"
-                className="w-10 h-8 hover:rotate-12 transition duration-500"
+                className="w-12 h-10 hover:rotate-12 transition duration-500"
               >
                 <path
                   strokeLinecap="round"

@@ -1,16 +1,22 @@
 import { Link, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../assets/loading";
 import Reviews from "../reviews/reviews";
 import SameProcuts from "../same products/sameProducts";
+import theStore from "../../store/store.js";
+import GetCart from "../../functions/getCart.js";
 function Product() {
+  /// the store
+  const { store } = useContext(theStore);
   /// navigate
   let navigate = useNavigate();
   /// session expired when session expired=> user need to login or user will be consider as a guist
   let [session, setSession] = useState(true);
   /// get the product url
   let { productUrl } = useParams();
+  /// get the wanted big image to show
+  let [bigImg, setBigImag] = useState("");
   /// get the product data
   let [product, setProduct] = useState({});
   useEffect(() => {
@@ -34,6 +40,7 @@ function Product() {
       .then((data) => {
         if (data.success === true) {
           setProduct(data.data);
+          setBigImag(data.data.productImgs[0]);
         } else {
           navigate("/all-products");
         }
@@ -45,8 +52,8 @@ function Product() {
     const colors = document.getElementsByClassName("_colors");
     Object.keys(colors).forEach((clr) => {
       colors[clr].id === e.target.id
-        ? colors[clr].classList.add("border-green-500")
-        : colors[clr].classList.remove("border-green-500");
+        ? colors[clr].classList.remove("opacity-30")
+        : colors[clr].classList.add("opacity-30");
     });
     setColor(e.target.id);
   }
@@ -169,6 +176,7 @@ function Product() {
               top: 0,
               behavior: "smooth",
             });
+            GetCart(store);
             setTimeout(() => {
               setAdded(false);
             }, 10000);
@@ -191,7 +199,7 @@ function Product() {
         {added && (
           <div className="w-full p-2 h-fit bg-gradient-to-r from-green-300 to-green-500 rounded-md text-white flex flex-col  items-center justify-center">
             <div className="flex items-center justify-center flex-row">
-              <p> item is in your cart </p>
+              <p> you added the item to your cart </p>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -226,40 +234,56 @@ function Product() {
             </div>
           </div>
         )}
-
-        <div className="flex flex-col bg-white w-full h-fit min-h-screen p-4 mt-10">
+        {/* body is here */}
+        <div className="grid sm:grid-cols-2 gap-4 grid-rows-2">
           {/* images div */}
-
-          <div className="flex justify-center items-center w-full h-3/6 flex-col gap-10 sm:flex-row ">
-            {product.productImgs.map((img, index) => {
-              return (
-                <img
-                  key={index}
-                  src={img}
-                  alt={product.productName}
-                  className="rounded-lg w-full sm:w-1/6  hover:scale-110  sm:hover:scale-150 hover:border hover:border-green-600 transition ease-in-out duration-500"
-                />
-              );
-            })}
+          <div className="w-full h-screen p-0 border border-gray-100 rounded-lg grid grid-rows-6 gap-2 shadow-lg bg-gray-50 shadow-gray-300">
+            <div className="row-span-5 w-full h-full">
+              <img
+                src={bigImg}
+                alt={product.productName}
+                className="w-full h-full rounded-lg"
+              />
+            </div>
+            <div className="row-span-1 flex flex-rows gap-2 w-full h-full overflow-x-scroll">
+              {product.productImgs.map((img, index) => {
+                return (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={product.productName}
+                    className="rounded-lg w-72 border-2 border-gray-300 hover:border-black transtion duration-300"
+                    onClick={() => {
+                      setBigImag(img);
+                    }}
+                  />
+                );
+              })}
+            </div>
           </div>
-          <div className="w-full p-2 h-fit bg-white flex flex-col gap-4 justify-center items-center text-lg sm:text-2xl text-green-600 mt-10">
+          {/* product information */}
+          <div className="w-full p-0 h-fit bg-white flex flex-col gap-4 justify-center items-center text-md text-gray-600">
             {/* product name */}
-            <div className="w-full h-fit flex justify-center items-center bg-zinc-100">
+            <div className="w-full h-fit flex justify-center items-center font-extrabold">
               <h1>{product.productName}</h1>
             </div>
             {/* product description */}
-            <div className="w-full h-fit flex justify-center items-center">
+            <div className="w-full h-fit flex justify-center items-center font-bold">
               {product.productDescription}
             </div>
             {/* product brand */}
             <div className="flex flex-col gap-4 items-center">
-              <h2>brand:</h2>
+              <h2 className="font-bold">brand:</h2>
               {product.productBrand}
             </div>
             {/* varients */}
             {/* colors */}
             <div className="w-full h-fit flex justify-center items-center flex-col gap-4">
-              <div>{product.colors.length > 0 && <h2>colors:</h2>}</div>
+              <div>
+                {product.colors.length > 0 && (
+                  <h2 className="font-bold"> colors:</h2>
+                )}
+              </div>
               {product.colors.length > 0 && (
                 <div className=" flex flex-row gap-4 ">
                   {product.colors.map((color) => {
@@ -268,7 +292,7 @@ function Product() {
                         onClick={getColor}
                         key={color}
                         id={color}
-                        className="_colors w-12 h-6 rounded-md border-zind-200 border-2 hover:scale-110 transition ease-in-out duration-300 shadow-green-500 shadow-sm hover:shadow-lg hover:shadow-green-500"
+                        className="_colors w-12 h-12 rounded-full border-2 border-gray-400"
                         style={{ background: color }}
                       ></button>
                     );
@@ -279,7 +303,7 @@ function Product() {
               {product.sizes.length > 0 && (
                 <div className="flex flex-col gap-4 items-center">
                   <div>
-                    <h2>Sizes: </h2>
+                    <h2 className="font-bold">Sizes: </h2>
                   </div>
                   <div className="flex flex-row gap-4">
                     {product.sizes.map((size, index) => {
@@ -288,7 +312,7 @@ function Product() {
                           id={size}
                           onClick={getSize}
                           key={index}
-                          className="_sizes w-fit h-fit border-2  p-1 rounded-lg hover:scale-110 transition ease-in-out duration-300 shadow-green-500 shadow-sm hover:shadow-lg hover:shadow-green-500"
+                          className="_sizes text-md h-12 w-12 rounded-lg bg-gray-50 border"
                         >
                           {size}
                         </button>
@@ -301,7 +325,7 @@ function Product() {
               {product.otherVarients.length > 0 && (
                 <div className="flex flex-col gap-4 items-center">
                   <div>
-                    <h2>varients: </h2>
+                    <h2 className="font-bold">varients: </h2>
                   </div>
                   <div className="flex flex-row gap-4">
                     {product.otherVarients.map((varient, index) => {
@@ -310,7 +334,7 @@ function Product() {
                           id={varient}
                           onClick={getVarients}
                           key={index}
-                          className="_var w-fit h-fit border-2  p-1 rounded-lg hover:scale-110 transition ease-in-out duration-300 shadow-green-500 shadow-sm hover:shadow-lg hover:shadow-green-500"
+                          className="_var w-fit p-2 px-4 h-12 rounded-lg text-md bg-gray-50 border border-gray-100"
                         >
                           {varient}
                         </button>
@@ -321,8 +345,10 @@ function Product() {
               )}
             </div>
             {/* number of items */}
-            <div className="w-1/6 flex flex-col gap-4 mt-5">
-              <label htmlFor="items">number of items:</label>
+            <div className="w-full flex flex-col gap-4 items-center justify-center">
+              <label htmlFor="items" className="font-bold">
+                Quantity:
+              </label>
               <input
                 id="items"
                 type="number"
@@ -330,7 +356,7 @@ function Product() {
                 max={100}
                 value={numOfItems}
                 onChange={getItems}
-                className="w-full h-fit outline-0 border-2 border-zinc-200 rounded-lg text-center number-input"
+                className="w-fit p-2 outline-0 border-2 border-gray-200 rounded-lg text-center"
               />
             </div>
             {msg && (
@@ -360,7 +386,9 @@ function Product() {
                 <button
                   disabled={isFetching}
                   onClick={addToCart}
-                  className="p-4 w-fit h-fit rounded-lg border-2 border-zinc-200 text-md bg-green-600 text-white shadow-sm shadow-green-500 hover:scale-120 hover:shadow-lg hover:shadow-green-500 transition ease-in-out duration-300"
+                  className={`p-2 px-6 text-md w-fit rounded-lg border-2 border-gray-100 bg-gray-600 text-white transition ease-in-out duration-300 hover:border-gray-900 ${
+                    isFetching && "animate-ping opacity-50"
+                  }`}
                 >
                   add to cart
                 </button>

@@ -131,29 +131,28 @@ function Checkout() {
   // the checkout page //////////////
   if (verified == true) {
     return (
-      <div className="grid grid-cols-2 w-full h-fit min-h-screen mb-4">
+      <div className="sm:grid sm:grid-cols-2 flex flex-col-reverse w-full h-fit min-h-screen mb-4">
         {/* form */}
         <div className="bg-white w-full h-fit min-h-screen">
           <CheckoutForm totalPrice={totolPrice.toFixed(2)} items={cartItems} />
         </div>
-        <div className="bg-gradient-to-b from-white to-green-500 w-full p-4 h-fit min-h-screen flex flex-col gap-2 rounded-lg">
+        <div className="bg-gray-200 w-full p-4 h-fit min-h-screen flex flex-col gap-2 rounded-lg">
           {/* display cart items */}
           <div className="flex flex-col gap-2 p-2 items-center">
             {cartItems.map((item, index) => {
               return (
                 <div
                   key={index}
-                  className="w-full bg-gradient-to-r from-gray-600 to-teal-900 rounded grid grid-cols-4 h-16 p-2 items-center text-white gap-2"
+                  className="w-full bg-green-900 rounded flex flex-row h-fit p-2 items-center text-white gap-4"
                 >
-                  <div className="w-full">
+                  <div className="w-fit">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-12 rounded"
+                      className="w-12 h-12"
                     />
                   </div>
                   <div>
-                    {" "}
                     <h2>{item.name}</h2>
                   </div>
                   <div className="flex justify-center">
@@ -168,7 +167,7 @@ function Checkout() {
             })}
           </div>
           {/* display discount form */}
-          <div className="w-full h-fit p-2 flex items-center justify-center">
+          <div className="w-full p-2 flex items-center justify-center">
             <form
               onSubmit={getDiscount}
               className="flex flex-col w-full h-fit p-2 items-center justify-center "
@@ -193,7 +192,7 @@ function Checkout() {
               <div className="w-full flex items-center justify-start">
                 <button
                   type="submit"
-                  className="w-5/6 sm:w-3/6 md:w-2/6 border-white border-2 bg-teal-100 rounded-md p-2 text-black hover:border-green-600 transition duration-300"
+                  className="w-5/6 sm:w-3/6 md:w-2/6 border-white border-2 bg-gray-600 rounded-md p-2 text-white hover:bg-gray-500 transition duration-300"
                 >
                   apply
                 </button>
@@ -214,15 +213,15 @@ function Checkout() {
         <h1>Page Not Found</h1>
         <p>
           Sorry, the page you requested is not available. You can try adding
-          items to your cart{" "}
+          items to your cart
           <Link
             to={"/all-products"}
             className="p-2 border-2 border-zinc-200 shadow-md shadwo-green-500 rounded-md bg-green-100 m-2"
           >
-            {" "}
+            
             shop now
           </Link>
-          or visit your{" "}
+          or visit your
           <Link
             to={"/cart"}
             className="p-2 border-2 border-zinc-200 shadow-md shadwo-green-500 rounded-md bg-green-100 m-2"

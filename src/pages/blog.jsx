@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import LoadingSpinner from "../assets/loading";
 import { Link, useSearchParams } from "react-router-dom";
 import theStore from "../store/store.js";
@@ -13,7 +13,7 @@ function Blog() {
   });
   /// get all blogs
   useEffect(() => {
-    if (store.blogs.length==0){
+    if (store.blogs.length == 0) {
       fetch(
         `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
           import.meta.env.VITE_get_all_blogs
@@ -51,27 +51,34 @@ function Blog() {
     return <LoadingSpinner color={"green-600"} />;
   }
   return (
-    <div className="grid grid-rows gap-2 justify-center items-center">
-      <div className="h-fit min-h-screen bg-white p-4 grid grid-cols-3 gap-10 w-full items-center justify-center">
+    <div className="flex flex-col gap-6 justify-center items-center w-full p-6">
+      {/* header */}
+      <div className="text-2xl bg p-4 sm:w-3/6 flex flex-wrap text-center text-gray-600 shadow-2xl rounded-lg">
+        <h1>
+          Hello! Welcome to Green Galaxy Blog. Explore, Discover, and Delight in
+          Our Stories and Blogs
+        </h1>
+      </div>
+      {/* all blogs section */}
+      <div className="h-fit w-full bg-white p-6 grid sm:grid-cols-2 gap-4 w-full items-center justify-center">
         {store.blogs.map((blog, index) => {
           return (
             <Link
               to={`/blogs/${blog.blog_id}`}
               key={index}
-              className="w-full h-fit p-2 text-green-700 cursor-pointer border-2 border-zinc-200 rounded-md shadow-md shadow-green-500 flex flex-col gap-4 bg-white hover:contrast-150 transition duration-300"
+              className={`w-full h-96 p-4 bg-gray-100 rounded-lg text-gray-600 grid sm:grid-rows-6 gap-2 items-center justify-center cursor-pointer hover:contrast-150 transition duration-300`}
             >
-              <div>
+              {/* image */}
+              <div className="row-span-5 w-full h-full">
                 <img
                   src={blog.CoverImage}
                   alt={blog.title}
-                  className="w-full rounded-md"
+                  className="h-full w-full"
                 />
               </div>
-              <div>
+              <div className="row-span-1 p-2">
+                {/* title */}
                 <h2>{blog.title}</h2>
-              </div>
-              <div>
-                <p>{blog.body.substring(0, blog.body.indexOf(".")) + "... "}</p>
               </div>
             </Link>
           );
@@ -79,7 +86,7 @@ function Blog() {
       </div>
       {/* more blogs */}
       <button
-        className="w-full bg-zinc-100 flex items-center justify-center p-4 hover:bg-zinc-200 transition ease-on-out duration-300"
+        className="w-full h-10 bg-gray-100 flex items-center justify-center p-4 hover:bg-zinc-200 transition ease-on-out duration-300"
         onClick={moreBlogs}
       >
         <svg

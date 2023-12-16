@@ -5,28 +5,22 @@ function ProductCard({ title, price, imageUrl, productLink }) {
   /// get params and return the specific product
   let { productUrl } = useParams();
   let [url, setUrl] = useState(productUrl);
-
-  /// add to cart function
-  function addToCart(e) {
- 
-  }
-
   /// rendering
   return (
     <div
-      className="w-80 h-fit p-2 text-center rounded-lg shadow-md shadow-green-600 hover:shadow-lg hover:shadow-green-600 bg-white hover:rotate-1 transition duration-500 flex flex-col items-center justify-center"
+      className="w-60 h-80 p-2 grid grid-rows-6 gap-4 text-center hover:bg-gray-300 transition duration-300 rounded-lg shadow-lg shadow-gray-300 bg-white border-2 border-green-300 transition duration-300 flex flex-col items-center justify-center"
       onClick={setUrl}
     >
-      <Link to={productLink}>
+      <Link to={productLink} className="w-full h-full row-span-4">
         <img
           src={imageUrl}
           alt={title}
-          className="w-96 h-48 object-cover rounded-lg "
+          className="w-full h-full object-cover rounded-lg row-span-3"
         />
       </Link>
-      <div className="mt-4">
+      <div className="row-span-2 w-full h-full">
         <Link to={productLink}>
-          <h2 className="text-xl font-semibold text-green-600 hover:text-teal-400 transition">
+          <h2 className="text-md font-bold text-gray-600">
             {title}
           </h2>
         </Link>
