@@ -1,8 +1,7 @@
-import colors from "../templates/colors.json";
 function AboutUs() {
   return (
     <div
-      className={`flex flex-col gap-5 mt-5 mb-5 p-5 SM:text-2xl items-center justify-center rounded w-full h-full bg-${colors.mainBackgroundColor} text-${colors.mainTextColor}`}
+      className={"flex flex-col gap-5 mt-5 mb-5 p-5 text-md text-gray-700 items-center justify-center w-full h-full bg-white"}
     >
       <div className="md:w-4/6 lg:w-3/6 sm:w-4/6 w-full">
         <div className="title text-4xl">

@@ -40,7 +40,6 @@ function AllProducts() {
         setStartFetching(false);
       })}
   }, [searchParams, store]);
-  console.log(store.products);
   /// page control
   function increase() {
     setSearchParams({
@@ -112,7 +111,7 @@ function AllProducts() {
               </svg>
             </button>
           </div>
-          <div className="text-green-600 flex justify-center items-center font-bold text-lg">
+          <div className="text-gray-600 flex justify-center items-center font-bold text-lg">
             page: {parseInt(searchParams.get("page"))}
           </div>
         </div>
@@ -122,55 +121,57 @@ function AllProducts() {
 
   ///////// render products
   return (
-    <div className="h-fit w-full bg-white flex flex-col items-center ">
+    <div className="h-fit w-full bg-white flex flex-col items-center gap-4">
       {/* filter component ***************************************************************************************/}
-      <div className="w-full h-fit mt-1 mb-1 bg-green-100 rounded-lg text-green-800 p-2 flex flex-col gap-2">
+      <div className="w-fit py-2 px-6 bg-gray-100 text-md text-gray-600 rounded-lg h-fit flex flex-col gap-2">
+        {/* title */}
         <h1 className="text-xl">filter:</h1>
-        <form
-          action=""
-          className="flex flex-row w-full p-1 gap-2 justify-center items-center h-full"
-          onSubmit={getFiltered}
-        >
-          <div className="price w-1/6">
+        {/* form */}
+        <form className="grid sm:grid-cols-4 gap-2 h-fit items-center justify-center" onSubmit={getFiltered}>
+          {/* price */}
+          <div className="price w-full">
             <input
               type="number"
               placeholder="maximum price"
               value={filter.price}
               onChange={(e) => setFilter({ ...filter, price: e.target.value })}
-              className="rounded-lg bg-white text-green-600 border border-1 border-green-600 outline-0 p-2 text-center w-full"
+              className="rounded-lg bg-white text-gray-600 outline-0 p-2 text-center w-full"
             />
           </div>
-          <div className="category w-1/6">
+          {/* category */}
+          <div className="category w-full h-fit">
             <input
               type="text"
               placeholder="category"
-              className="rounded-lg bg-white text-green-600 border border-1 border-green-600 outline-0 p-2 text-center w-full"
+              className="rounded-lg bg-white text-gray-600 outline-0 p-2 text-center w-full"
               value={filter.category}
               onChange={(e) =>
                 setFilter({ ...filter, category: e.target.value })
               }
             />
           </div>
-          <div className="color w-1/6">
+          {/* color */}
+          <div className="color w-full h-fit">
             <input
               type="text"
               placeholder="Color"
-              className="rounded-lg bg-white text-green-600 border border-1 border-green-600 outline-0 p-2 text-center w-full"
+              className="rounded-lg bg-white text-gray-600 outline-0 p-2 text-center w-full"
               value={filter.color}
               onChange={(e) => setFilter({ ...filter, color: e.target.value })}
             />
           </div>
-          <div className="w-1/6 flex items-center justify-center">
+          {/* submit */}
+          <div className="w-full">
             <input
               type="submit"
-              value={"Filter"}
-              className="rounded-lg border border-green-500 border-2 p-2 w-full bg-white hover:bg-green-200 hover:border-white transition ease-in-out duration-300"
+              value={"filter"}
+              className="rounded-lg p-1 w-full bg-gray-600 text-white border-2 border-white hover:border-green-500 transition ease-in-out duration-300"
             />
           </div>
         </form>
       </div>
       {/* all products  ********************************************************************************************************8*/}
-      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 p-5 gap-5 w-full h-fit justify-center items-center">
+      <div className="flex sm:flex-row sm:flex-wrap flex-col p-2 gap-4 w-full h-fit justify-center items-center">
         {store.products.map((product) => {
           return (
             <ProductCard
@@ -203,7 +204,7 @@ function AllProducts() {
             </svg>
           </button>
         </div>
-        <div className="text-green-600 flex justify-center items-center font-bold text-lg">
+        <div className="text-gray-600 flex justify-center items-center font-bold text-lg">
           page: {parseInt(searchParams.get("page"))}
         </div>
         <div className="flex justify-center items-center">
