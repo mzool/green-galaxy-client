@@ -1,87 +1,98 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import LoadingSpinner from "../assets/loading";
 import trackOrder from "../functions/trackOrder.js";
 import OrderInfo from "../components/trackorder/showOrder.jsx";
-import theStore from "../store/store.js";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 function TrackOrder() {
-  const { store } = useContext(theStore);
+  const [search, setSearch] = useSearchParams();
   //// order number variable
-  let [orderNumber, setOrderNumber] = useState("");
-  /// orders info
-  let [orders, setOrders] = useState({});
+  const [orderNumber, setOrderNumber] = useState(
+    search.get("orderNumber") || ""
+  );
+  /// order info
+  const [order, setOrder] = useState({});
+  /// email
+  const [email, setEmail] = useState(search.get("email") || "");
   /// fetching
-  let [isFetching, setFetching] = useState(false);
+  const [isFetching, setFetching] = useState(false);
   /// msg
-  let [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState("");
+  /// if there are a params then get the order
+  useEffect(() => {
+    if (email && orderNumber) {
+      trackOrder(orderNumber, email, setOrder, setMsg);
+    }
+  }, []);
+
   //// track order function
   function startTracking(e) {
     e.preventDefault();
+    /// set search params
+    setSearch({ email, orderNumber });
     setFetching(true);
-    trackOrder(orderNumber, setOrders, setMsg).then(() => {
+    trackOrder(orderNumber, email, setOrder, setMsg).then(() => {
       setFetching(false);
     });
   }
   /////// rendering
-  if (!store.user.name) {
-return <div className="flex items-center justify-center text-green-600 p-4 w-full h-screen">Please Login first in order to track your orders.</div>
-   } else {
-    if (isFetching) {
-      return <LoadingSpinner color={"green-500"} />;
-    }
-    /// if order data available
-    if (orders.orderNumber && !isFetching) {
-      return (
-        <OrderInfo
-          order_number={orders.orderNumber}
-          fullName={orders.fullName}
-          totalPrice={orders.totalPrice}
-          paid={orders.paid}
-          payment_method={orders.payment_method}
-          phone_number={orders.phone_number}
-          items={orders.items}
-          status = {orders.order_status}
-          address={orders.address}
-        />
-      );
-    }
-    if (msg) {
-      return (
-        <div className="w-full p-4 h-screen flex items-center justify-center text-green-600">
-          {msg}
-        </div>
-      );
-    }
+  if (isFetching) {
+    return <LoadingSpinner color={"green-500"} />;
+  }
+  /// if order data available
+  if (order.orderNumber) {
     return (
-      <div className="w-full p-10 h-screen bg-white flex items-start justify-center ">
-        {/* form that take order number and search for it  */}
-        <form
-          onSubmit={startTracking}
-          className="w-fit h-fit p-10 bg-green-600 rounded-lg flex flex-col gap-4 items-center justify-center"
-        >
-          <div className="flex items-center justify-center">
-            <input
-              id="orderNumber"
-              type="text"
-              placeholder="order_234XXX"
-              className="p-4 rounded-lg outline-0 "
-              value={orderNumber}
-              onChange={(e) => {
-                setOrderNumber(e.target.value);
-              }}
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <button
-              type="submit"
-              className="p-4 rounded-lg bg-white text-green-700 px-6 hover:bg-zinc-100 transition duration-300"
-            >
-              track my order
-            </button>
-          </div>
-        </form>
+      <div className="w-full flex justify-center p-4">
+        <OrderInfo order={order} setOrder={setOrder} />
       </div>
     );
   }
+  return (
+    <div className="w-full p-10 h-screen bg-white flex items-start justify-center text-gray-700">
+      {/* form that take order number and search for it  */}
+      <form
+        onSubmit={startTracking}
+        className="w-full sm:w-4/6 md:w-3/6 h-fit text-sm p-10 bg-green-600 rounded-lg flex flex-col gap-4 items-center justify-center"
+      >
+        <div className="flex flex-col gap-4 items-center justify-center w-full">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email"
+            className="px-4 py-2 rounded-md outline-0 w-full"
+          />
+          <input
+            required
+            id="orderNumber"
+            type="text"
+            placeholder="order id"
+            className="px-4 py-2 rounded-md outline-0 w-full"
+            value={orderNumber}
+            onChange={(e) => {
+              setOrderNumber(e.target.value);
+            }}
+          />
+        </div>
+        {/* message */}
+        {msg && (
+          <div className="text-red-500 p-2 bg-white w-fit rounded-md place-self-start">
+            {msg}
+          </div>
+        )}
+        {/* submint */}
+        <div className="flex items-center justify-center">
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-md bg-white hover:bg-gray-200 transition duration-300"
+          >
+            track my order
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default TrackOrder;

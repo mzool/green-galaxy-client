@@ -1,5 +1,4 @@
-import { useState, useRef, useContext } from "react";
-import colors from "../../templates/colors.json";
+import { useState, useRef, useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import theStore from "../../store/store";
 import profileImg from "../../assets/profileImg.svg";
@@ -7,7 +6,7 @@ function Drawer() {
   /// navigate
   const navigate = useNavigate();
   /// get the globals
-  let {store} = useContext(theStore);
+  let { store } = useContext(theStore);
   /// search
   let [search, setSearch] = useState("");
   /// logout function
@@ -35,6 +34,23 @@ function Drawer() {
         window.location.href = "/";
       });
   }
+  /// handle wheel
+  const [visible, setVisible] = useState(false);
+  function handleWheel(e) {
+    if (e.deltaY < 0) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }
+  ////event listener
+  useEffect(() => {
+    document.addEventListener("wheel", (e) => handleWheel(e));
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("wheel", (e) => handleWheel(e));
+    };
+  }, []);
   /// list down function
   let [open, setOpen] = useState(false);
   /// reference
@@ -52,7 +68,9 @@ function Drawer() {
 
   return (
     <div
-      className={`flex flex-row  bg-${colors.navbarColor} min-h-10 h-fit w-full p-4 items-center`}
+      className={`flex flex-row bg-green-600 min-h-10 h-fit w-full p-4 items-center z-10 ${
+        visible ? "top-0" : "top-full" 
+      }`}
     >
       <div className="w-4/6 flex justify-center items-center font-semibold  sm:mb-0 text-center p-1">
         <h1 className="text-white w-full text-2xl hover:text-teal-300 transition ease-in-out duration-300 ">
@@ -98,7 +116,7 @@ function Drawer() {
         </button>
         <div
           ref={theList}
-          className="hidden absolute flex flex-col inset-0 top-20 mt-5 bg-green-600  w-full h-fit text-green-900 justify-center items-center p-4 z-10 shadow-lg shadow-green-500 border border-2 border-white rounded-md"
+          className="hidden absolute flex flex-col inset-0 top-20 bg-green-600  w-full h-fit text-green-900 justify-center items-center p-4 z-10 shadow-lg shadow-green-500 border border-2 border-white rounded-md"
         >
           <div className="close w-full flex justify-start items-center">
             <button
@@ -189,14 +207,18 @@ function Drawer() {
                 type="text"
                 className="p-1 rounded-lg outline-none flex-1 w-full mb-2 "
                 value={search}
-                onChange={(e)=>setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div className="flex justify-center items-center mt-1">
-              <label htmlFor="search" className="w-1/6" onClick={()=>{
-                controlList()
-                navigate(`/search?searchFor=${search}`)
-              }}>
+              <label
+                htmlFor="search"
+                className="w-1/6"
+                onClick={() => {
+                  controlList();
+                  navigate(`/search?searchFor=${search}`);
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -216,7 +238,11 @@ function Drawer() {
           </div>
           {/* cart */}
           <div className="w-full flex justify-center items-center">
-            {store.cart.userPicks && <p className="h-2 w-2 p-2 rounded-full bg-white flex items-center justify-center absolute">{store.cart.userPicks.length}</p>}
+            {store.cart.items?.length > 0 && (
+              <p className="h-2 w-2 p-2 rounded-full bg-white flex items-center justify-center absolute">
+                {store.cart.items.length}
+              </p>
+            )}
             <NavLink
               to="/cart"
               className={linkClass.style}
@@ -268,7 +294,7 @@ function Drawer() {
               "loggingout..."
             ) : store.user.name ? (
               <button
-              disabled={loggingOut}
+                disabled={loggingOut}
                 onClick={logout}
                 className="bg-red-600 text-white rounded-lg h-fit w-fit p-1 hover:bg-white hover:text-red-600"
               >

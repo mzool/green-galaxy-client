@@ -7,25 +7,22 @@ import removeItem from "../functions/removeItemFromCart.js";
 function CartPage() {
   /// get the store
   const { store } = useContext(theStore);
+  const { items } = store.cart;
   /// is fetching
   let [isFetching, setFetching] = useState(false);
   /// msg
   let [msg, setMsg] = useState("");
   /// get cart items from server
   useEffect(() => {
-    if (store.cart.userPicks?.length > 0) {
-      return;
-    } else {
-      setFetching(true);
-      GetCart(store).then(() => setFetching(false));
-    }
+    setFetching(true);
+    GetCart(store).finally(() => setFetching(false));
   }, []);
   /// if is fetching
   if (isFetching) {
     return <LoadingSpinner color={"green-500"} />;
   }
   /// if no cart available
-  if (store.cart.userPicks?.length == 0 || !store.cart.userPicks) {
+  if (items?.length == 0 || !items) {
     return (
       <div className="min-h-screen h-fit bg-white flex items-center justify-center flex-col gap-4 text-green-600">
         <div className="bg-zinc-100 p-2 rounded-lg flex flex-row flex-wrap gap-2">
@@ -70,9 +67,10 @@ function CartPage() {
         </Link>
       </div>
     );
-  } else ////////////////////////////////////////////////////////////
+  } ////////////////////////////////////////////////////////////
+  else
     return (
-      <div className="h-fit min-h-screen w-full px-10 py-4 flex flex-col gap-4 items-center justify-center">
+      <div className="h-fit min-h-screen w-full px-10 py-4 flex flex-col gap-4 items-center justify-start">
         {/* message */}
         {msg && (
           <div className="w-full p-2 bg-gradient-to-r from-green-400 to-green-600 rounded-md text-white flex flex-col items-center justify-center">
@@ -82,11 +80,11 @@ function CartPage() {
         {/* title */}
         <div className="bg-gray-100 rounded-lg p-2 w-full text-center text-2xl font-bold text-gray-600">
           <h1>
-            Your Cart ({store.cart.userPicks.length}
-            {store.cart.userPicks.length>1?" items":" item"})
+            Your Cart ({items.length}
+            {items.length > 1 ? " items" : " item"})
           </h1>
         </div>
-        {store.cart.userPicks.map((pk, index) => {
+        {items.map((item, index) => {
           return (
             <div
               key={index}
@@ -95,53 +93,57 @@ function CartPage() {
             >
               {/* product information */}
               {/* image */}
-              <Link to={`../products/${pk.id}`} className="w-full h-full">
+              <Link
+                to={`../products/${item.product.id}`}
+                className="w-full h-full flex items-center justify-center"
+              >
                 <img
-                  src={pk.image}
-                  alt={pk.name}
-                  className="rounded-lg w-full h-full "
+                  src={item.product.images[0]}
+                  alt={item.product.name}
+                  className="rounded-lg w-24 h-24 "
                 />
               </Link>
               {/* name and stock*/}
-              <div className="flex flex-col sm:gap-6 items-center justify-center">
-                <div> {pk.name}</div>
+              <div className="flex flex-col sm:gap- items-center justify-center">
+                <div> {item.product.name}</div>
                 <div>
-                  {pk.stock > 0 ? (
+                  {item.product.stock > 0 ? (
                     <p className="text-white">in stock</p>
                   ) : (
                     <p className="text-red-500">out of stock</p>
                   )}
                 </div>
               </div>
-              {/* user picks */}
-              <div className="flex flex-col gap-2 justify-center items-center">
-                <div>
-                  <h2>varients:</h2>
-                </div>
-                {pk.color && (
+              {/* cart items */}
+            { (item.color || item.size || item.otherVarients)  && <div className="flex flex-col gap-2 justify-center items-center">
+                {item.color && (
                   <div className="flex flex-row gap-2">
-                    <p>color:</p> <p>{pk.color}</p>
+                    <p>color:</p>{" "}
+                    <div
+                      className="w-6 h-6 rounded"
+                      style={{ backgroundColor: item.color }}
+                    ></div>
                   </div>
                 )}
 
-                {pk.size && (
+                {item.size && (
                   <div className="flex flex-row gap-2">
-                    <p>size:</p> <p>{pk.size}</p>
+                    <p>size:</p> <p>{item.size}</p>
                   </div>
                 )}
-                {pk.varients && (
+                {item.otherVarients && (
                   <div className="flex flex-row gap-2">
-                    <p>varients:</p> <p>{pk.otherVarients}</p>
+                    <p>varients:</p> <p>{item.otherVarients}</p>
                   </div>
                 )}
-              </div>
+              </div>}
 
               {/* quantity */}
               <div className="flex flex-col gap-2 items-center justify-center">
                 <label htmlFor="quantity">quantity:</label>
                 <div>
                   <p className="rounded-lg p-1 w-full outline-0 text-white">
-                    {pk.quantity}
+                    {item.quantity}
                   </p>
                 </div>
               </div>
@@ -149,15 +151,15 @@ function CartPage() {
               {/* price */}
               <div className="flex flex-row gap-2 items-center justify-center">
                 <h2>price:</h2>
-                <p>{pk.totalPrice}</p>
+                <p>{(item.quantity * item.product.price).toFixed(2)}</p>
               </div>
               {/* remove */}
               <div className="flex items-center justify-center">
                 <button
-                  className="w-full h-fit p-2 flex items-center justify-center hover:bg-red-100 transition duration-300 rounded-lg"
+                  className="w-full h-fit p-2 flex flex-row gap-2 items-center justify-center hover:bg-red-500 transition duration-300 rounded-lg"
                   onClick={() => {
                     removeItem(
-                      pk.itemId,
+                      item._id,
                       store.cart.cartId,
                       setMsg,
                       GetCart,
@@ -165,20 +167,7 @@ function CartPage() {
                     );
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="red"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  remove
                 </button>
               </div>
             </div>

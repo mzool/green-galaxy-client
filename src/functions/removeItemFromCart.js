@@ -10,9 +10,11 @@ function removeItem(itemId, cartId, msg, fun, store) {
                 "content-type": "application/json",
                 Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
                     }`,
-                itemid: itemId,
-                cartid: cartId,
             },
+            body: JSON.stringify({
+                cart_id: cartId,
+                itemId
+            })
         }
     )
         .then((res) => res.json())

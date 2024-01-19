@@ -4,49 +4,35 @@ import { useContext, useEffect, useState } from "react";
 import theStore from "../store/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import LoadingSpinner from "../assets/loading";
+import getUser from "../functions/getUserInfo.js";
+import login from "../functions/loginFetch.js";
 const LoginPage = () => {
   /// navigate
   const navigate = useNavigate();
   /// location
   const location = useLocation();
   /// get the global store
-  let store = useContext(theStore);
-  /// do not return login component if the user is already logged in
-  let [LogIn, setLogIn] = useState(false);
+  let { store } = useContext(theStore);
   /// get user info
-  let [endFetch, setEndFetch] = useState(false);
+  //// is fetching for rendering controll
+  const [isFetching, setIsFetching] = useState(false);
   useEffect(() => {
     /// check store
-    if (store.store.user.id) {
+    if (store.user._id) {
       navigate("/profile");
     } else {
-      fetch(
-        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-          import.meta.env.VITE_get_user_info
-        }`,
-        {
-          method: "GET",
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
-          },
-        }
-      )
+      setIsFetching(true);
+      /// get user information from the cookies
+      getUser()
         .then((res) => res.json())
         .then((data) => {
-          if (data._id) {
-            store.store.updateUser(data);
-            location.state?.wanted
-              ? navigate(location.state.wanted)
-              : navigate("/profile");
-          } else {
-            setLogIn(true);
+          if (data.success) {
+            store.updateUser(data.data);
+            navigate("/profile");
           }
-
-          setEndFetch(true);
+        })
+        .finally(() => {
+          setIsFetching(false);
         });
     }
   }, []);
@@ -61,41 +47,21 @@ const LoginPage = () => {
     validationSchema: loginSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      fetch(
-        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-          import.meta.env.VITE_login
-        }`,
-        {
-          method: "post",
-          cors: "cors",
-          headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
-            "content-type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            email: values.email,
-            password: values.password,
-          }),
-        }
-      )
+      login(values)
         .then((res) => res.json())
         .then((data) => {
-          if (data.error) {
-            setErrMsg(data.error);
-          } else {
-            store.store.updateUser(data);
+          if (data.success) {
             location.state?.wanted
               ? navigate(location.state.wanted)
               : navigate("/profile");
+          } else {
+            setErrMsg(data.message);
           }
         });
     },
   });
   ///// rendering
-  if (LogIn && endFetch) {
+  if (!store.user._id && !isFetching) {
     return (
       <div className="min-h-screen flex p-4 justify-center h-full w-full bg-white">
         <div className="w-full sm:w-4/6 md:w-3/6 h-fit p-10 space-y-4 bg-white rounded-lg shadow-lg border-2 border-zinc-200 shadow-green-500 shadow-lg mt-10">

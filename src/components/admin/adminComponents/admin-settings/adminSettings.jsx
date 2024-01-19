@@ -1,21 +1,11 @@
-import AboutUsSettings from "./aboutUs";
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-function AdminSettings() {
-  /// get params
-  let [searchParams, setSearchParams] = useSearchParams({
-    page: "settings",
-    toDo: "about-us",
-  });
-  /// render to do settings
-  let [settingsToDo, setToDo] = useState("home-page");
-  /// render base on searchParams
-  useEffect(() => {
-    setToDo(searchParams.get("toDo"));
-  }, [searchParams]);
+import AdminStylesPage from "../style/adminStylesPage";
+import { useState } from "react";
 
-  /// rendering
-  return <div className="p-4 w-full h-fit min-h-screen bg-white m-2">{settingsToDo === "about-us" && <AboutUsSettings />}</div>;
+function AdminSittings() {
+  /// to do
+  const [page, setPage] = useState("theme");
+  //// rendering
+  return <div className="w-full p-4 h-fit">{page == "theme" && <AdminStylesPage />}</div>;
 }
 
-export default AdminSettings;
+export default AdminSittings;

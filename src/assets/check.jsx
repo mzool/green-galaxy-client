@@ -20,3 +20,4 @@ function Check(props) {
     </div>
   );
 }
+export default Check
