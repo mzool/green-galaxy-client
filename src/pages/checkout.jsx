@@ -1,83 +1,32 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
 import LoadingSpinner from "../assets/loading";
 import CheckoutForm from "../components/checkout/checkoutForm";
+import theStore from "../store/store.js";
+import getDiscount from "../functions/discountCode.js";
+import GetCart from "../functions/getCart.js";
 function Checkout() {
-  /// get cart id
-  const { cart_id } = useParams();
-  /// get cart items
-  let [cartItems, setCartItems] = useState([]);
-  /// total price
-  let [totolPrice, setTotalPrice] = useState(0);
+  //// store
+  const { store } = useContext(theStore);
   /// discount code
-  let [discountCode, setDiscountCode] = useState("");
+  const [discountCode, setDiscountCode] = useState("");
   /// is fitching for rendering
-  let [isFetching, setIsFetching] = useState(false);
-  let [verified, setVerified] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   /// msgs
-  let [message, setMsg] = useState({
+  const [message, setMsg] = useState({
     err: "",
     msg: "",
   });
-  /// check for the cart id
+  // get cart items from server
   useEffect(() => {
-    setIsFetching(true);
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_get_checkout_page
-      }/${cart_id}`,
-      {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          fetch(
-            `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-              import.meta.env.VITE_get_cart
-            }`,
-            {
-              method: "get",
-              mode: "cors",
-              credentials: "include",
-              headers: {
-                Authorization: `GreenBearer ${
-                  import.meta.env.VITE_authorization_token
-                }`,
-              },
-            }
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.cart.allCartProducts) {
-                setCartItems(data.cart.allCartProducts);
-                setIsFetching(false);
-              } else {
-                setIsFetching(false);
-              }
-            });
-          setVerified(true);
-        } else {
-          setIsFetching(false);
-          setVerified(false);
-        }
-      });
+    if (store.cart.items?.length > 0) {
+      setIsFetching(false);
+      return;
+    } else {
+      GetCart(store).finally(() => setIsFetching(false));
+    }
   }, []);
-  /// set total price
-  useEffect(() => {
-    cartItems.forEach((item) => {
-      setTotalPrice((pr) => (pr += item.totalPrice));
-    });
-  }, [cartItems]);
   /// handle discount submit
-  function getDiscount(e) {
+  function handleDiscount(e) {
     e.preventDefault();
     /// regix to check discount code
     const dRegex = /^[a-zA-Z0-9]+$/;
@@ -90,22 +39,7 @@ function Checkout() {
       return;
     } else {
       /// fetch the server for the discount code
-      fetch(
-        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-          import.meta.env.VITE_get_discount_code
-        }`,
-        {
-          method: "post",
-          mode: "cors",
-          headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
-            "content-type": "apllication/json",
-          },
-          body: JSON.stringify({ discountCode }),
-        }
-      )
+      getDiscount(discountCode)
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
@@ -129,17 +63,21 @@ function Checkout() {
     return <LoadingSpinner color={"green-500"} />;
   }
   // the checkout page //////////////
-  if (verified == true) {
+  if (store.cart.items?.length > 0) {
     return (
       <div className="sm:grid sm:grid-cols-2 flex flex-col-reverse w-full h-fit min-h-screen mb-4">
         {/* form */}
         <div className="bg-white w-full h-fit min-h-screen">
-          <CheckoutForm totalPrice={totolPrice.toFixed(2)} items={cartItems} />
+          <CheckoutForm
+            totalPrice={store.cart.totalPrice.toFixed(2)}
+            items={store.cart.items}
+            cartId={store.cart.cartId}
+          />
         </div>
         <div className="bg-gray-200 w-full p-4 h-fit min-h-screen flex flex-col gap-2 rounded-lg">
           {/* display cart items */}
           <div className="flex flex-col gap-2 p-2 items-center">
-            {cartItems.map((item, index) => {
+            {store.cart.items.map((item, index) => {
               return (
                 <div
                   key={index}
@@ -147,20 +85,20 @@ function Checkout() {
                 >
                   <div className="w-fit">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.images[0]}
+                      alt={item.product.name}
                       className="w-12 h-12"
                     />
                   </div>
                   <div>
-                    <h2>{item.name}</h2>
+                    <h2>{item.product.name}</h2>
                   </div>
                   <div className="flex justify-center">
                     <h1>quantity:</h1>
                     {item.quantity}
                   </div>
                   <div>
-                    <h2>item price: {item.price}</h2>
+                    <h2>item price: {item.product.price}</h2>
                   </div>
                 </div>
               );
@@ -169,7 +107,7 @@ function Checkout() {
           {/* display discount form */}
           <div className="w-full p-2 flex items-center justify-center">
             <form
-              onSubmit={getDiscount}
+              onSubmit={handleDiscount}
               className="flex flex-col w-full h-fit p-2 items-center justify-center "
             >
               {/* discount code */}
@@ -184,7 +122,7 @@ function Checkout() {
                 />
               </div>
               {/* message */}
-              <div className="w-full flex items-center justify-end p-2">
+              <div className="w-full flex items-center p-2">
                 {message.err && <p className="text-red-500">{message.err}</p>}
                 {message.msg && <p className="text-teal-600">{message.msg}</p>}
               </div>
@@ -201,34 +139,15 @@ function Checkout() {
           </div>
           {/* total price after discount */}
           <div className="w-fit flex items-center justify-start m-4 text-black p-4 bg-white rounded-lg">
-            <h1> total price: {totolPrice.toFixed(2)}</h1>
+            <h1> total price: {store.cart.totalPrice.toFixed(2)}</h1>
           </div>
         </div>
       </div>
     );
   } else {
-    //////////////////////////////////////// no checkout page
     return (
-      <div className="h-screen flex flex-col gap-2 justify-center items-center bg-white text-green-600 ">
-        <h1>Page Not Found</h1>
-        <p>
-          Sorry, the page you requested is not available. You can try adding
-          items to your cart
-          <Link
-            to={"/all-products"}
-            className="p-2 border-2 border-zinc-200 shadow-md shadwo-green-500 rounded-md bg-green-100 m-2"
-          >
-            
-            shop now
-          </Link>
-          or visit your
-          <Link
-            to={"/cart"}
-            className="p-2 border-2 border-zinc-200 shadow-md shadwo-green-500 rounded-md bg-green-100 m-2"
-          >
-            cart.
-          </Link>
-        </p>
+      <div className="h-screen w-full text-center text-2xl font-bold text-green=600">
+        no cart found for you.
       </div>
     );
   }

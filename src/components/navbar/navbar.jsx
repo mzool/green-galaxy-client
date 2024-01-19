@@ -47,14 +47,24 @@ const Navbar = () => {
   let [screenWidth, setScreenWidth] = useState(window.innerWidth);
   //// fetch cart api and add search event listener
   function handleSearchKeyPress(e) {
-    if (e.key == "/") {
+    if (e.ctrlKey && e.key == "/") {
       e.preventDefault();
       searchRef.current.focus();
     }
   }
+  /// handle wheel
+  const [visible, setVisible] = useState(true);
+  function handleWheel(e) {
+    if (e.deltaY < 0) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }
   //// get cart and add event listener
   useEffect(() => {
-    document.addEventListener("keypress", handleSearchKeyPress);
+    document.addEventListener("wheel", (e) => handleWheel(e));
+    document.addEventListener("keydown", handleSearchKeyPress);
     setTimeout(() => {
       GetCart(store);
     }, 2000);
@@ -67,14 +77,18 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("keypress", handleSearchKeyPress);
+      window.removeEventListener("wheel", (e) => handleWheel(e));
     };
   }, []);
-
   if (screenWidth < 1050) {
     return <Drawer />;
   }
   return (
-    <nav className="bg-green-600 p-2 ">
+    <nav
+      className={`bg-green-600 p-2 z-10 ${
+        visible ? "top-0" : "bottom-full"
+      } `}
+    >
       <div className="grid grid-cols-5 gap-1 items-center justify-center p-2">
         {/* Logo */}
         <Link to="/" className="text-white text-3xl font-semibold">
@@ -104,6 +118,9 @@ const Navbar = () => {
             className="flex flex-row gap-0 p-2 rounded-lg w-full"
             onSubmit={(e) => {
               e.preventDefault();
+              if (search.length == 0) {
+                return;
+              }
               const searchFor = search;
               setSearch("");
               navigate(`/search?searchFor=${searchFor}`);
@@ -117,7 +134,7 @@ const Navbar = () => {
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
-              placeholder="type / to search"
+              placeholder="ctrl and / to search"
               className="border border-2 border-white p-2 rounded-lg focus:border focus:border-2 outline-none flex-1 w-5/6"
             />
             <button
@@ -168,9 +185,9 @@ const Navbar = () => {
           </div>
           {/* cart */}
           <div className="w-3/6 p-2 flex flex-col gap-0 justify-center items-center">
-            {store.cart.userPicks && (
+            {store.cart.items?.length>0 && (
               <p className="w-4 h-4 p-0 bg-white rounded-full flex items-center justify-center text-xs">
-                {store.cart.userPicks.length}
+                {store.cart.items.length}
               </p>
             )}
             <Link to={"/cart"} className="">

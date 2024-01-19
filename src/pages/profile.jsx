@@ -1,8 +1,7 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import theStore from "../store/store";
 import LoadingSpinner from "../assets/loading";
-import ConfirmEmail from "../components/auth/confirmEmail";
 import ProfileImag from "../assets/profileImag";
 import Addressbook from "../assets/addressBook";
 import LoveHeart from "../assets/loveHeart";
@@ -11,53 +10,31 @@ import List from "../assets/list";
 import Chat from "../assets/chat";
 import Sun from "../assets/sun";
 import ProfilePageContents from "../components/profile page components/ProfilePageContents";
+import getUser from "../functions/getUserInfo.js";
 const ProfilePage = () => {
-  /// get state
-  const location = useLocation();
-  const state = location.state;
   /// navigate
   const navigate = useNavigate();
   /// get the global store
-  let store = useContext(theStore);
-  /// no profile if the user not logged in
-  let [profilePage, setProfilePage] = useState(false);
-  /// if user email confirmed
-  let [confirmed, setConfirmed] = useState(true);
+  const { store } = useContext(theStore);
+  //// is fetching
+  const [isFetching, setIsFetching] = useState(false);
   /// get user info
   useEffect(() => {
-    if (store.store.user._id) {
-      setConfirmed(store.store.user.confirm_email);
-      if (confirmed) {
-        setProfilePage(true);
-      }
-    } else
-      fetch(
-        `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-          import.meta.env.VITE_get_user_info
-        }`,
-        {
-          method: "GET",
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
-          },
-        }
-      )
+    if (!store.user._id) {
+      setIsFetching(true);
+      getUser()
         .then((res) => res.json())
         .then((data) => {
-          if (!data._id) {
-            navigate("/login", { state: { ...state, prv: "/profile" } });
+          if (data.success) {
+            store.updateUser(data.data);
           } else {
-            setConfirmed(data.confirm_email);
-            if (data.confirm_email) {
-              setProfilePage(true);
-            }
+            navigate("/login");
           }
-          store.store.updateUser(data);
+        })
+        .finally(() => {
+          setIsFetching(false);
         });
+    }
   }, []);
   /// section to render
   const [section, setSection] = useState("personalInfo");
@@ -69,9 +46,9 @@ const ProfilePage = () => {
       "w-full h-fit p-2 flex flex-row gap-4 rounded-lg items-center justify-start  text-black transition duration-300 cursor-pointer hover:bg-gray-200",
   };
   //// rendering
-  if (profilePage && confirmed) {
+  if (store.user._id) {
     return (
-      <div className="bg-white h-screen grid sm:grid-cols-4 grid-rows-2 gap-4">
+      <div className="bg-white h-fit sm:grid sm:grid-cols-4 flex flex-col gap-4">
         {/* side bar */}
         <div className={style.sideBar}>
           {/* personal information with update functions*/}
@@ -130,6 +107,17 @@ const ProfilePage = () => {
             <Chat color={"green"} />
             <h2>chat with us</h2>
           </div>
+          {/* go to admin */}
+          {store.user.permesions && (
+            <div>
+              <Link
+                to={"/auth/admin"}
+                className="bg-teal-600 text-white rounded-lg p-2 hover:bg-teal-800 hover:cursor-pointer"
+              >
+                Admin page
+              </Link>
+            </div>
+          )}
         </div>
         {/* content */}
         <div className="bg-white sm:col-span-3">
@@ -137,8 +125,6 @@ const ProfilePage = () => {
         </div>
       </div>
     );
-  } else if (confirmed === false) {
-    return <ConfirmEmail />;
   } else {
     return <LoadingSpinner color={"green-500"} />;
   }

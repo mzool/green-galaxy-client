@@ -16,8 +16,9 @@ async function GetCart(store){
         .then((data) => {
             if (data.success) {
                 store.updateCart({
-                    cartId: data.cart.cart_id,
-                    userPicks: data.cart.allCartProducts,
+                    cartItems: data.cartData.cart.items,
+                    cartId:data.cartData.cartId,
+                    totalPrice: data.cartData.totalPrice
                 });
             }
         });

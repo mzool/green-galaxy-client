@@ -30,6 +30,7 @@ import Checkout from "./pages/checkout";
 import TrackOrder from "./pages/trackOrder";
 /// search result
 import SearchResult from "./components/search/searchResult";
+import Sales from "./pages/sales";
 //////////////////////
 function App() {
   /// context api for global store
@@ -49,7 +50,7 @@ function App() {
     updateCart: (item) => {
       setStore((prevStore) => ({
         ...prevStore,
-        cart: { cartId: item.cartId, userPicks: item.userPicks },
+        cart: { items: item.cartItems, cartId: item.cartId, totalPrice: item.totalPrice },
       }));
     },
     blogs: [],
@@ -57,6 +58,14 @@ function App() {
       setStore((prevStore) => ({
         ...prevStore,
         blogs: [...prevStore.blogs, ...item],
+      }));
+    },
+    location: {},
+    theme: {},
+    updateTheme: (style) => {
+      setStore((prevStore) => ({
+        ...prevStore,
+        theme: { ...prevStore.theme, style },
       }));
     },
   });
@@ -74,15 +83,16 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<Contact />} />
-          <Route path="/auth-admin" element={<AuthAdmin />} />
+          <Route path="/auth/admin" element={<AuthAdmin />} />
           <Route path="/products/:productUrl" element={<Product />} />
           <Route path="/all-products" element={<AllProducts />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blogs/:blog_id" element={<GetBlog />} />
-          <Route path="/checkout/:cart_id" element={<Checkout />} />
+          <Route path="/checkout/:cartId" element={<Checkout />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/search" element={<SearchResult />} />
+          <Route path="/sales" element={<Sales />} />
         </Routes>
         <Footer />
       </BrowserRouter>

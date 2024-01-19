@@ -2,41 +2,29 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { validationSchema } from "../validation/schemas";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import dots from "../assets/dots.svg";
 import LoadingSpinner from "../assets/loading";
-import colors from "../templates/colors.json";
-//import theStore from "../store/store.js";
+import theStore from "../store/store.js";
+import getUser from "../functions/getUserInfo.js";
+import register from "../functions/registerFetch.js";
 const RegisterPage = () => {
   /// store
- // let {store} = useContext(theStore);
+  let { store } = useContext(theStore);
   /// navigate
   let navigate = useNavigate();
   /// get user info
   let [isFetch, setFetch] = useState(true);
   useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_get_user_info
-      }`,
-      {
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data._id) {
-          navigate("/profile");
-        } else {
-          setFetch(false);
-        }
-      });
+    if (!store.user._id) {
+      getUser()
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            navigate("/profile");
+          } else {
+            setFetch(false);
+          }
+        });
+    }
   }, []);
 
   /// error handling and massages
@@ -44,23 +32,7 @@ const RegisterPage = () => {
   /// handle registration
   const handleSubmit = (values, { setSubmitting }) => {
     setSubmitting(true);
-    fetch(
-      `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
-        import.meta.env.VITE_register
-      }`,
-      {
-        method: "post",
-        cors: "cors",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(values),
-        credentials: "include",
-      }
-    )
+    register(values)
       .then((res) => res.json())
       .then((data) => {
         if (data.message == "Validation error") {
@@ -70,7 +42,9 @@ const RegisterPage = () => {
         } else {
           navigate("/profile");
         }
-      });
+      }).finally(()=>{
+        setSubmitting(false)
+      })
   };
   //// style
   const style = {
@@ -82,12 +56,13 @@ const RegisterPage = () => {
     return <LoadingSpinner color={"green-500"} />;
   }
   return (
-    <div
-      className={`min-h-screen flex items-center justify-center bg-${colors.mainBackgroundColor}`}
-    >
-      <div className="bg-white p-8 rounded shadow-lg w-5/6 sm:w-4/6 md:w-3/6 mt-6 border-2 border-zinc-200 shadow-green-500 shadow-lg">
-        <h1 className="text-2xl font-semibold mb-6">
-          Green Galaxy Registration
+    <div className="min-h-screen sm:grid sm:grid-cols-3 p-6 flex flex-col gap-4 items-start justify-center bg-white">
+      {/* register with section */}
+      <div className="col-span-1 w-full bg-gray-100 h-full flex flex-col gap-6 p-6 items-center rounded-lg text-green-600"></div>
+      {/* green galaxy form */}
+      <div className="col-span-2 bg-white p-8 rounded w-full bg-black border-2 border-zinc-200 shadow-gray-500 shadow-lg">
+        <h1 className="text-2xl font-bold mb-6 text-green-600">
+          Start your journey with Green Galaxy
         </h1>
         <Formik
           initialValues={{
@@ -101,7 +76,7 @@ const RegisterPage = () => {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form>
+            <Form className="w-full">
               <div className="mb-4">
                 <label htmlFor="username">Username</label>
                 <Field type="text" name="username" className={style.field} />
@@ -166,12 +141,10 @@ const RegisterPage = () => {
               <div className="text-center">
                 <button
                   type="submit"
-                  className={`bg-${colors.buttonsColor} text-white px-4 py-2 rounded hover:bg-green-700 transition ease-in-out duration-300 `}
-                  // disabled={isSubmitting}
+                  className="bg-green-600 text-white px-6 py-2 m-4 rounded hover:bg-green-700 transition ease-in-out duration-300"
+                  disabled={isSubmitting}
                 >
-                  {isSubmitting && !errMsg ? (
-                    <img src={dots} width={"30px"} alt="grenn-galaxy-dots" />
-                  ) : (
+                  {isSubmitting && !errMsg ? "registering..." : (
                     "register"
                   )}
                 </button>

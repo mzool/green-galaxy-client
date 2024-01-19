@@ -1,19 +1,15 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import ConfirmOrder from "./confirmOrder";
 function PaymentPage(props) {
-  /// get cart id
-  const { cart_id } = useParams();
   /// payment method
   let [method, setMethod] = useState("");
   /// get last info
-  const { shippingInfo, items, totalPrice } = props;
+  const { shippingInfo, items, totalPrice, cartId } = props;
   /// is fetching for rendering
   let [isFetching, setFetching] = useState(false);
-  
   /// rendering
   if (method){
-    return <ConfirmOrder info = {shippingInfo} totalPrice={totalPrice} payment_method={method} items = {items} cart_id={cart_id}/>
+    return <ConfirmOrder info = {shippingInfo} totalPrice={totalPrice} payment_method={method} items = {items} cartId={cartId}/>
   }
   ///////////
   return (
@@ -33,14 +29,14 @@ function PaymentPage(props) {
         </button>
       </div>
       {/* paypal */}
-      <div className="w-full">
+      {/* <div className="w-full">
         <button
           onClick={()=>{setMethod("paypal")}}
           className="p-2 px-4 rounded-lg border-white text-white bg-teal-500 border-2 w-full hover:border-gray-500 transition duration-300"
         >
           Paypal
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

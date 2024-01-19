@@ -10,11 +10,13 @@ export default {
 
   theme: {
     extend: {
-      width:{
-        'page':'1200px'
-      }
+      width: {
+        'page': '1200px'
+      }, 
     },
+  }, corePlugins: {
+    aspectRatio: false,
   },
-  plugins: [],
+  plugins: [import('@tailwindcss/aspect-ratio'),],
 }
 

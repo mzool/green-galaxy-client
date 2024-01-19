@@ -3,7 +3,7 @@ import { useState } from "react";
 import checkoutSchema from "../../validation/checkout_schema.js";
 import PaymentPage from "./checkoutPayment.jsx";
 function CheckoutForm(props) {
-  const { items, totalPrice } = props;
+  const { items, totalPrice, cartId } = props;
   /// progress bar
   let [progress, setProgress] = useState({
     info: true,
@@ -45,6 +45,7 @@ function CheckoutForm(props) {
         items={items}
         totalPrice={totalPrice}
         shippingInfo={shippingInfo}
+        cartId={cartId}
       />
     );
   } else
