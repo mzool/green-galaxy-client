@@ -49,18 +49,15 @@ const RegisterPage = () => {
   //// style
   const style = {
     field:
-      "w-full p-2 outline-0 border border-zinc-200 shadow-green-200 shadow-sm focus:border-2 focus:border-green-500 hover:shadow-lg hover:shadow-green-500 rounded-md transition ease-in-out duration-300",
+      "w-full p-2 text-gray-700 outline-0 border border-gray-200 focus:border-2 focus:border-green-500 rounded-md transition ease-in-out duration-300",
   };
   /// loader
   if (isFetch) {
     return <LoadingSpinner color={"green-500"} />;
   }
   return (
-    <div className="min-h-screen sm:grid sm:grid-cols-3 p-6 flex flex-col gap-4 items-start justify-center bg-white">
-      {/* register with section */}
-      <div className="col-span-1 w-full bg-gray-100 h-full flex flex-col gap-6 p-6 items-center rounded-lg text-green-600"></div>
-      {/* green galaxy form */}
-      <div className="col-span-2 bg-white p-8 rounded w-full bg-black border-2 border-zinc-200 shadow-gray-500 shadow-lg">
+    <div className="w-full p-4 h-fit bg-white flex items-center justify-center text-gray-700">
+      <div className="bg-white p-8 rounded-md w-full sm:w-4/6 lg:w-3/6 border-1 border-gray-200 shadow-gray-500 shadow-md">
         <h1 className="text-2xl font-bold mb-6 text-green-600">
           Start your journey with Green Galaxy
         </h1>
@@ -144,17 +141,15 @@ const RegisterPage = () => {
                   className="bg-green-600 text-white px-6 py-2 m-4 rounded hover:bg-green-700 transition ease-in-out duration-300"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting && !errMsg ? "registering..." : (
-                    "register"
-                  )}
+                  {isSubmitting && !errMsg ? "registering..." : "register"}
                 </button>
               </div>
               <div className="mt-2 text-red-500">
                 <p className="mt-2">{errMsg}</p>
               </div>
-              <div className="mt-2 flex flex-cols gap-2 bg-white">
+              <div className="mt-2 flex flex-col bg-white">
                 <p>Have an account? </p>
-                <Link to={"/login"} className="text-green-500">
+                <Link to={"/login"} className="text-green-600 hover:text-green-800 transtion duration-300">
                   Go to Login page
                 </Link>
               </div>

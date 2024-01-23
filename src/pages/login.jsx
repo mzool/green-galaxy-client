@@ -1,12 +1,20 @@
 import { useFormik } from "formik";
 import { loginSchema } from "../validation/schemas";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import theStore from "../store/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import LoadingSpinner from "../assets/loading";
 import getUser from "../functions/getUserInfo.js";
 import login from "../functions/loginFetch.js";
+import { Link } from "react-router-dom";
+import forgetPasswordHandler from "../functions/forgetPassword.js";
+
 const LoginPage = () => {
+  /// forget password
+  const forgetPassDialog = useRef(null);
+  const [forgetPasswordEmail, setForgetEmail] = useState("");
+  const [dialogMsg, setDialogMsg] = useState("");
+  const [fetchingDialog, setFetchingDialog] = useState(false);
   /// navigate
   const navigate = useNavigate();
   /// location
@@ -46,25 +54,32 @@ const LoginPage = () => {
     },
     validationSchema: loginSchema,
     onSubmit: (values) => {
+      setIsFetching(true);
       // Handle form submission here
       login(values)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            location.state?.wanted
-              ? navigate(location.state.wanted)
-              : navigate("/profile");
+        .then((res) => {
+          if (res.status == 400) {
+            setErrMsg("invalid email or password");
           } else {
-            setErrMsg(data.message);
+            res.json().then((data) => {
+              if (data.success) {
+                navigate("/profile");
+              } else {
+                setErrMsg(data.message);
+              }
+            });
           }
+        })
+        .finally(() => {
+          setIsFetching(false);
         });
     },
   });
   ///// rendering
   if (!store.user._id && !isFetching) {
     return (
-      <div className="min-h-screen flex p-4 justify-center h-full w-full bg-white">
-        <div className="w-full sm:w-4/6 md:w-3/6 h-fit p-10 space-y-4 bg-white rounded-lg shadow-lg border-2 border-zinc-200 shadow-green-500 shadow-lg mt-10">
+      <div className="min-h-screen flex p-4 justify-center h-full w-full bg-white p-10">
+        <div className="w-full sm:w-4/6 md:w-3/6 h-fit p-10 space-y-4 rounded-md border bg-white border-gray-300 shadow-md shadow-gray-400">
           <form onSubmit={formik.handleSubmit}>
             <div className="space-y-4 flex flex-col justify-center">
               <div>
@@ -81,7 +96,7 @@ const LoginPage = () => {
                     formik.touched.email && formik.errors.email
                       ? "border-b-2 border-red-500 outline-0"
                       : "border-b-2 border-green-500 outline-0"
-                  }`}
+                  } `}
                   {...formik.getFieldProps("email")}
                 />
                 {formik.touched.email && formik.errors.email && (
@@ -118,14 +133,92 @@ const LoginPage = () => {
               </div>
               <div className="w-full flex justify-center">
                 <button
+                  disabled={isFetching}
                   type="submit"
-                  className="w-3/6 py-2 px-4 text-white rounded-md bg-green-500 hover:bg-green-700 transition ease-in-out duration-300"
+                  className="w-full py-2 px-4 text-white rounded-md bg-green-500 hover:bg-green-700 transition ease-in-out duration-300"
                 >
                   login
                 </button>
               </div>
             </div>
           </form>
+          <div className="w-full flex flex-col gap-2">
+            {/* forget password dialog */}
+            <dialog
+              ref={forgetPassDialog}
+              className="w-fit h-fit p-4 rounded-md backdrop:bg-black backdrop:bg-opacity-50"
+            >
+              <form
+                className="flex flex-col gap-4 text-gray-700 p-4"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setFetchingDialog(true);
+                  forgetPasswordHandler(forgetPasswordEmail)
+                    .then((res) => {
+                      if (res.status == 429) {
+                        return setDialogMsg(
+                          "We had sent an email with new password to this email address, try again after 24 hours"
+                        );
+                      } else {
+                        return res.json();
+                      }
+                    })
+                    .then((data) => {
+                      setDialogMsg(data.message);
+                    })
+                    .finally(() => {
+                      setForgetEmail("");
+                      setFetchingDialog(false);
+                      setTimeout(() => {
+                        setDialogMsg("");
+                        forgetPassDialog.current.close();
+                      }, 3000);
+                    });
+                }}
+              >
+                <p>
+                  we will send a new password to your email address, use it to
+                  access your account and change it
+                </p>
+                <p className="text-xs text-red-500">
+                  ** this password is valid just for one time login process, even
+                  if you logged in using current password{" "}
+                </p>
+                <label htmlFor="email">enter your email address:</label>
+                <input
+                  disabled={fetchingDialog}
+                  type="email"
+                  required
+                  value={forgetPasswordEmail}
+                  onChange={(e) => setForgetEmail(e.target.value)}
+                  className="rounded-md px-4 py-2 outline-0 border focus:border-green-700"
+                />
+                <p>{dialogMsg}</p>
+                <input
+                  disabled={fetchingDialog}
+                  type="submit"
+                  value={"send email with new password"}
+                  className="rounded-md px-4 py-2 bg-green-600 text-white hover:bg-green-800 transtion duration-300"
+                />
+              </form>
+            </dialog>
+            {/* forget password */}
+            <button
+              className="text-gray-700 w-fit hover:text-gray-500 transtion duration-300"
+              onClick={() => {
+                forgetPassDialog.current.showModal();
+              }}
+            >
+              forget your password?
+            </button>
+            {/* go to register page */}
+            <Link
+              to={"/register"}
+              className="text-green-700 hover:text-green-500 w-fit transition duration-300"
+            >
+              Register
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -133,5 +226,4 @@ const LoginPage = () => {
     return <LoadingSpinner color={"green-500"} />;
   }
 };
-
 export default LoginPage;

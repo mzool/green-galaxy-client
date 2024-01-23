@@ -1,17 +1,17 @@
-async function getDiscount(discountCode) {
+async function forgetPasswordHandler(email) {
     try {
         const promise = await fetch(
-            `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${import.meta.env.VITE_get_discount_code
+            `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${import.meta.env.VITE_forget_password
             }`,
             {
-                method: "post",
+                method: "POST",
                 mode: "cors",
                 headers: {
                     Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
                         }`,
                     "content-type": "application/json",
                 },
-                body: JSON.stringify({ discountCode }),
+                body: JSON.stringify({ email:email }),
             }
         )
         return promise
@@ -20,4 +20,4 @@ async function getDiscount(discountCode) {
     }
 }
 
-export default getDiscount
+export default forgetPasswordHandler

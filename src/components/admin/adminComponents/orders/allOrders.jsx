@@ -2,8 +2,15 @@ import { useState, useEffect } from "react";
 import getAllOrders from "../../admin-functions/getAllOrders.js";
 import LoadingSpinner from "../../../../assets/loading.jsx";
 import OrderData from "./orderData.jsx";
+import AllOrderData from "./allOrderData.jsx";
 function AllOrders() {
   ///
+  const [search, setSearch] = useState({
+    order_id: "",
+    userName: "",
+    email: "",
+  });
+  const [filterd, setFiltered] = useState([]);
   const [orders, setOrders] = useState([]);
   const [isFetching, setFetching] = useState(false);
   const [orderData, setOrderData] = useState(null);
@@ -19,8 +26,42 @@ function AllOrders() {
       })
       .finally(() => setFetching(false));
   }, []);
-
+  /// function find order
+  function handleFilter() {
+    let filteredOrder = [];
+    orders.forEach((order) => {
+      if (
+        order.email == search.email ||
+        order.firstName.toLowerCase() == search.userName.toLocaleLowerCase() ||
+        order.lastName.toLocaleLowerCase() ==
+          search.userName.toLocaleLowerCase() ||
+        order.order_id == search.order_id
+      ) {
+        filteredOrder.push(order);
+      }
+    });
+    setFiltered(filteredOrder);
+  }
   /// rendering
+  if (filterd.length > 0 && !orderData) {
+    return (
+      <div className="flex flex-col gap-10 text-gray-700 p-10">
+        <div className="grid grid-cols-2">
+          <h2 className="font-bold">filtered orders:</h2>
+          <button
+            className="bg-gray-700 text-white px-4 py-2 rounded-md w-fit"
+            onClick={() => {
+              setFiltered([]);
+              setSearch({ email: "", userName: "", order_id: "" });
+            }}
+          >
+            clear filter
+          </button>
+        </div>
+        <AllOrderData orders={filterd} setOrderData={setOrderData} />
+      </div>
+    );
+  }
   if (isFetching) {
     return <LoadingSpinner color={"green-500"} />;
   }
@@ -29,40 +70,46 @@ function AllOrders() {
   }
   return (
     <div className="flex flex-col h-fit min-h-screen p-6">
+      {/* search for order */}
+      <div className="flex flex-row gap-4 bg-gray-100 rounded-md p-4 text-gray-700 mb-5">
+        <input
+          type="email"
+          value={search.email}
+          placeholder="email"
+          onChange={(e) =>
+            setSearch((pr) => ({ ...pr, email: e.target.value }))
+          }
+          className="rounded-md px-4 py-2"
+        />
+        <input
+          type="text"
+          value={search.userName}
+          placeholder="user name"
+          onChange={(e) =>
+            setSearch((pr) => ({ ...pr, userName: e.target.value }))
+          }
+          className="rounded-md px-4 py-2"
+        />
+        <input
+          type="text"
+          value={search.order_id}
+          placeholder="order id"
+          onChange={(e) =>
+            setSearch((pr) => ({ ...pr, order_id: e.target.value }))
+          }
+          className="rounded-md px-4 py-2"
+        />
+        <button
+          onClick={handleFilter}
+          className="px-4 py-2 rounded-md bg-gray-700 text-white"
+        >
+          find order
+        </button>
+      </div>
       <h2 className="font-bold text-xl mb-4">
         All Orders: ({orders.length} order)
       </h2>
-      {/* headers */}
-      <div className="bg-gray-600 p-4 grid grid-cols-4 text-white">
-        {/* number */}
-        <h2>number</h2>
-        <h2>order id</h2>
-        <h2>user name</h2>
-        <h2>order status</h2>
-      </div>
-      {/* data */}
-      {orders.map((order, index) => (
-        <div
-          key={index}
-          className={`grid grid-cols-4 ${
-            index % 2 == 0
-              ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              : "bg-gray-600 text-white hover:bg-gray-700"
-          } p-4  p-4 cursor-pointer `}
-          onClick={() => setOrderData(order)}
-        >
-          {/* number */}
-          <h2>{index + 1}</h2>
-          {/* order id */}
-          <div>{order.order_id}</div>
-          {/* user name */}
-          <h2>
-            {order.firstName} {order.lastName}
-          </h2>
-          {/* order status */}
-          <h2>{order.order_status}</h2>
-        </div>
-      ))}
+      <AllOrderData orders={orders} setOrderData={setOrderData} />
     </div>
   );
 }

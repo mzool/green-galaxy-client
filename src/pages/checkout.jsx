@@ -100,6 +100,9 @@ function Checkout() {
                   <div>
                     <h2>item price: {item.product.price}</h2>
                   </div>
+                  <div>
+                    <h2>discount: {item.product.discount}%</h2>
+                  </div>
                 </div>
               );
             })}
@@ -138,8 +141,9 @@ function Checkout() {
             </form>
           </div>
           {/* total price after discount */}
-          <div className="w-fit flex items-center justify-start m-4 text-black p-4 bg-white rounded-lg">
+          <div className="w-fit flex flex-col items-center justify-start m-4 text-black p-4 bg-white rounded-lg">
             <h1> total price: {store.cart.totalPrice.toFixed(2)}</h1>
+            <p className="text-xs">*shipping and taxes calculated when confirm order</p>
           </div>
         </div>
       </div>

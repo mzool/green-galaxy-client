@@ -103,7 +103,7 @@ function Product() {
               )}
             </div>
             {/********************************** product description **********************************/}
-            <div className="p-2 font-semi boldtext-gray-700 text-lg">
+            <div className="p-2 font-semibold text-gray-700 text-lg">
               {product.productDescription}
             </div>
             {/*********************************** made to order  ***********************************/}
@@ -151,7 +151,7 @@ function Product() {
             <div className="w-full py-2 px-4">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-teal-600 text-white font-bold rounded-lg p-2 text-lg mt-6 hover:bg-teal-800 transition ease-in-out duration-300"
+                className="w-full bg-teal-600 text-white rounded-lg p-2 text-lg mt-6 hover:bg-teal-800 transition ease-in-out duration-300"
               >
                 {addingToCart
                   ? "adding the item to your cart..."

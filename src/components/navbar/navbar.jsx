@@ -41,7 +41,7 @@ const Navbar = () => {
   /// style
   const linkClass = {
     style:
-      "text-white hover:text-emerald-300 text-sm transition duration-300 ease-in-out aria-[current=page]:underline",
+      "text-white hover:text-green-300 text-sm transition duration-300 ease-in-out aria-[current=page]:underline",
   };
   /// make the navbar responsive
   let [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -215,7 +215,7 @@ const Navbar = () => {
             {store.user.name ? (
               <NavLink
                 to="/profile"
-                className="text-white hover:text-emerald-300 "
+                className="text-white hover:text-green-300 "
               >
                 <div className="flex flex-col justify-center items-center m-0 h-10">
                   <img
@@ -229,9 +229,9 @@ const Navbar = () => {
             ) : (
               <NavLink
                 to="/login"
-                className="text-green-600 hover:text-white bg-emerald-200 hover:bg-emerald-900 border border-1 border-white rounded-lg p-2 transition duration-500 ease-in-out text-center"
+                className="text-green-600 text-sm hover:text-white bg-green-200 hover:bg-green-900 border border-white rounded-md px-4 py-2 transition duration-300 ease-in-out"
               >
-                Login
+                login
               </NavLink>
             )}
             {loggingOut ? (
@@ -239,14 +239,14 @@ const Navbar = () => {
             ) : store.user?.name ? (
               <button
                 onClick={logout}
-                className="bg-red-600 text-white rounded-lg h-fit w-fit p-2 hover:bg-white hover:text-red-600 transition ease-in-out duration-300"
+                className="bg-red-600 text-white rounded-md h-fit w-fit px-4 py-2 text-sm hover:bg-white hover:text-red-600 transition ease-in-out duration-300"
               >
                 Log out
               </button>
             ) : (
               <NavLink
                 to="/register"
-                className="bg-emerald-900 text-white hover:bg-emerald-200 hover:text-green-600 px-4 py-2 rounded-full transition duration-500 ease-in-out text-center"
+                className="bg-green-900 text-white hover:bg-green-200 text-sm hover:text-green-600 px-4 py-2 rounded-md transition duration-300 ease-in-out text-center"
               >
                 register
               </NavLink>

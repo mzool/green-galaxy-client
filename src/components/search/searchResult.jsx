@@ -46,6 +46,7 @@ function SearchResult() {
                   price={result.productPrice}
                   productLink={`../products/${result.productId}`}
                   imageUrl={result.productImgs[0]}
+                  discount={result.productDiscount}
                 />
               </div>
             );
