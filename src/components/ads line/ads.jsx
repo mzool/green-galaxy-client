@@ -32,9 +32,9 @@ function Ads(props = { ads: [null] }) {
   /// on hover 
   
   return (
-    <div className="w-full h-5 bg-white flex flex-row m-0 gap-3 justify-center items-center text-center">
+    <div className="w-full px-auto py-1 text-sm bg-white flex flex-row gap-2 justify-center items-center text-center">
       <div className="m-0 p-0 h-5 w-5">
-        <button onClick={prevAd} className="hover:bg-gray-200 rounded-full">
+        <button onClick={prevAd} className="hover:bg-green-200 rounded">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -55,7 +55,7 @@ function Ads(props = { ads: [null] }) {
         <Link to={ads[num][1]}>{theAd}</Link>
       </div>
       <div className="m-0 p-0 h-5 w-5">
-        <button onClick={nextAd} className="hover:bg-gray-200 rounded-full">
+        <button onClick={nextAd} className="hover:bg-green-200 rounded">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

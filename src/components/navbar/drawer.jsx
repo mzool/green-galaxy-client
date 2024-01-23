@@ -68,7 +68,7 @@ function Drawer() {
 
   return (
     <div
-      className={`flex flex-row bg-green-600 min-h-10 h-fit w-full p-4 items-center z-10 ${
+      className={`flex flex-row bg-green-600 min-h-10 h-fit w-full p-4 items-center z-10  ${
         visible ? "top-0" : "top-full" 
       }`}
     >

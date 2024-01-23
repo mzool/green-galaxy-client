@@ -3,10 +3,12 @@ import AdminProducts from "./adminComponents/products/admin_product";
 import MianBlogDashboard from "./adminComponents/blog/mainBlog";
 import AdminSettings from "./adminComponents/admin-settings/adminSettings";
 import AdminUsers from "./adminComponents/users/AdminUsers";
-import AdminOrders from "./adminComponents/orders/adminOrders"
-function Admin() {
+import AdminOrders from "./adminComponents/orders/adminOrders";
+import GetAllEmployess from "./adminComponents/employees/getAllEmployess";
+import MainDashboard from "./adminComponents/dashboard/mainDashboard";
+function Admin({rule}) {
   /// set search params
-  let [page, setPage] = useState("settings");
+  let [page, setPage] = useState("dashboard");
   /// style
   const style = {
     btn: "w-fit py-2 px-4 flex flex-row gap-2 items-center justify-center hover:bg-gray-500",
@@ -39,9 +41,9 @@ function Admin() {
     );
   }
   return (
-    <div className="h-fit min-h-screen w-full bg-white p-4 grid grid-rows-8 ">
-      {/* side bar */}
-      <div className="w-full row-span-1 bg-gray-600 text-white h-fit flex flex-row flex-wrap gap-2 rounded-lg p-6 items-center justify-center">
+    <div className="h-fit min-h-screen w-full bg-white flex flex-col ">
+      {/* nave bar */}
+      <div className="w-full row-span-1 bg-gray-700 text-white flex flex-row flex-wrap gap-2 p-4 items-center justify-center">
         {/* products */}
         <button className={style.btn} onClick={() => setPage("products")}>
           products
@@ -231,12 +233,21 @@ function Admin() {
 
       <div className="bg-white h-fit w-full row-span-7">
         {page === "products" && <AdminProducts />}
-        {page === "orders" && <AdminOrders/>} 
-        {page === "employees" && <>emoployees</>}
+        {page === "orders" && <AdminOrders />}
+        {page === "employees" ? (
+          rule === "superAdmin" ? (
+            <GetAllEmployess />
+          ) : (
+            <div className="h-screen w-full p-10 text-center text-red-500">
+              UnAuthorized
+            </div>
+          )
+        ) : null}
+
         {page === "settings" && <AdminSettings />}
         {page === "users" && <AdminUsers />}
         {page === "returns" && <>returns</>}
-        {page === "dashboard" && <>dashboard</>}
+        {page === "dashboard" && <MainDashboard/>}
         {page === "inventory" && <>inventory</>}
         {page === "marketing" && <>markiting</>}
         {page === "blog" && <MianBlogDashboard />}

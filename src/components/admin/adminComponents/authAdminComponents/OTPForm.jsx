@@ -2,7 +2,7 @@ import { useState } from "react";
 import checkOTP from "../../../../functions/checkForOTP.js";
 import Wrong from "../../../../assets/wrong.jsx";
 
-function OTPForm({admin, form}) {
+function OTPForm({admin, form, setRule}) {
   /// form value
   const [otp, setOtp] = useState("");
   /// is fetching
@@ -19,6 +19,7 @@ function OTPForm({admin, form}) {
         if (data.success) {
           admin(true);
           form(false);
+          setRule(data.rule);
           setWrong(false);
         } else {
           setWrong(true);

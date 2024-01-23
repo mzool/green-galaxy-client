@@ -2,7 +2,10 @@ import ImagePlaceHolder from "../../assets/imagePlaceHolde";
 import theStore from "../../store/store.js";
 import { useState, useContext, useRef, useEffect } from "react";
 import postImage from "../../functions/updateProfileImage.js";
-import Loader from "../loader";
+import ProfileChangePassword from "./profileChangePassword.jsx";
+
+
+
 function PersonalInfoProfile() {
   /// get the store
   const { store } = useContext(theStore);
@@ -30,24 +33,21 @@ function PersonalInfoProfile() {
   useEffect(() => {
     isUpdating(false);
   }, [message]);
-  /// if updating
-  if (updating) {
-    return <Loader />;
-  }
+
   /// style
   const style = {
-    parent:
-      "grid grid-cols-2 gap-2 bg-white w-full h-fit p-4 text-green-600 items-center justify-center",
+    parent: "flex flex-col gap-2 p-4 text-gray-700",
     personal:
-      "bg-gray-50 rounded-lg p-4 w-full h-full flex flex-col gap-2 items-start justify-center",
-    readOnlyInputs: "outline-0 border-2 border-zinc-300 rounded-lg p-2 w-full",
+      "bg-gray-100 rounded-md p-4 w-full h-full flex flex-col gap-2 items-start justify-center",
+    readOnlyInputs:
+      "outline-0 border border-gray-200 rounded-md px-4 py-2 w-full",
     passInput: "p-2 rounded-lg",
   };
 
   ///rendering
   return (
     <div className={style.parent}>
-      {message && (
+      {(message.msg || message.err) && (
         <div className="bg-white flex text-center p-2 text-green-600">
           {message.msg}
         </div>
@@ -60,6 +60,7 @@ function PersonalInfoProfile() {
 
       {/* personal information and profile image */}
       <div className={style.personal}>
+        <h2 className="font-bold">Account Information:</h2>
         {/* profile image */}
         <div>
           {src ? (
@@ -69,7 +70,7 @@ function PersonalInfoProfile() {
               className="w-24 h-24 sm:w-36 sm:h-36 rounded-full mb-2 "
             />
           ) : (
-            <ImagePlaceHolder width={36} height={36} color={"gray"} />
+            <ImagePlaceHolder width={36} height={36} color={"black"} />
           )}
           <input
             type="file"
@@ -80,12 +81,18 @@ function PersonalInfoProfile() {
               setProfileImage(e.target.files[0]);
             }}
           />
+
           <button
             disabled={updating}
-            className="bg-gray-500 text-white p-1 rounded-lg text-xs hover:bg-gray-600 transition duration-300"
+            className="bg-gray-700 text-white px-2 py-1 rounded-md text-xs hover:bg-gray-500 transition
+             duration-300 w-full flex items-center justify-center"
             onClick={openImageInput}
           >
-            change profile image
+            {updating ? (
+              <div className="w-6 h-6 rounded-full border-t-2 border-b-2 border-green-600 animate-spin place-self-center"></div>
+            ) : (
+              "change profile image"
+            )}
           </button>
         </div>
         {/* user name */}
@@ -122,36 +129,20 @@ function PersonalInfoProfile() {
       {/* here the div contain 2 sections as to rows */}
       <div className="w-full grid grid-rows-2 gap-2 h-full">
         {/* change password  */}
-        <div className="bg-teal-50 h-fit w-full p-2 flex flex-col gap-2 rounded-lg">
-          <h2>Change Password:</h2>
-          <form className=" flex flex-col gap-2 ">
-            <input
-              type="password"
-              placeholder="new password"
-              className={style.passInput}
-            />
-            <input
-              type="password"
-              placeholder="confirm password"
-              className={style.passInput}
-            />
-            <input
-              type="password"
-              placeholder="current password"
-              className={style.passInput}
-            />
-            <input
-              type="submit"
-              value={"change password"}
-              className="border-2 border-teal-500 rounded-lg bg-white w-fit py-1 px-4 hover:bg-green-50"
-            />
-          </form>
-        </div>
+        <ProfileChangePassword/>
+
         {/* affiliate rank */}
         <div className="w-full bg-green-50 rounded-lg p-2 h-fit flex flex-col gap-2">
           <h2>Your Affiliate Score:</h2>
-          <input type="text" readOnly className={style.readOnlyInputs} value={store.user.affiliate}/>
-          <p className="text-xs">* You can win points on: orders, reviews and comments on blogs</p>
+          <input
+            type="text"
+            readOnly
+            className={style.readOnlyInputs}
+            value={store.user.affiliate}
+          />
+          <p className="text-xs">
+            * You can win points on: orders, reviews and comments on blogs
+          </p>
         </div>
       </div>
     </div>

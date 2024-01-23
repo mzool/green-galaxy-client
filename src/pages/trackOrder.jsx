@@ -1,5 +1,4 @@
 import { useState } from "react";
-import LoadingSpinner from "../assets/loading";
 import trackOrder from "../functions/trackOrder.js";
 import OrderInfo from "../components/trackorder/showOrder.jsx";
 import { useSearchParams } from "react-router-dom";
@@ -36,9 +35,6 @@ function TrackOrder() {
     });
   }
   /////// rendering
-  if (isFetching) {
-    return <LoadingSpinner color={"green-500"} />;
-  }
   /// if order data available
   if (order.orderNumber) {
     return (
@@ -83,12 +79,16 @@ function TrackOrder() {
         )}
         {/* submint */}
         <div className="flex items-center justify-center">
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-md bg-white hover:bg-gray-200 transition duration-300"
-          >
-            track my order
-          </button>
+          {isFetching ? (
+            <div className="h-6 w-6 border-b-2 border-t-2 border-white animate-spin rounded-full"></div>
+          ) : (
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-md bg-white hover:bg-green-200 text-gray-700 transition duration-300"
+            >
+              track my order
+            </button>
+          )}
         </div>
       </form>
     </div>

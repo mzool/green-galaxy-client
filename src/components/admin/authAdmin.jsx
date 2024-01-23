@@ -6,6 +6,8 @@ import OTPForm from "./adminComponents/authAdminComponents/OTPForm.jsx";
 import { useNavigate } from "react-router-dom";
 import checkAdminCookie from "../../functions/checkAdminCookie.js";
 function AuthAdmin() {
+  /// rule
+  const [rule, setRule] = useState("");
   //// navigate
   const navigate = useNavigate();
   /// is fetching
@@ -41,8 +43,17 @@ function AuthAdmin() {
           }
         });
       } else {
-        setAdmin(true);
-        setIsFetching(false);
+        res
+          .json()
+          .then((data) => {
+            if (data.success) {
+              setRule(data.rule);
+            }
+          })
+          .finally(() => {
+            setAdmin(true);
+            setIsFetching(false);
+          });
       }
     });
   }, []);
@@ -56,11 +67,11 @@ function AuthAdmin() {
   }
   /// show otp form
   if (form) {
-    return <OTPForm admin={setAdmin} form={setForm}/>;
+    return <OTPForm admin={setAdmin} form={setForm} setRule={setRule}/>;
   }
-if(adminPage){
-  return <Admin/>
-}
+  if (adminPage) {
+    return <Admin rule={rule} />;
+  }
   if (isFetching) {
     /// is fetching
     return <LoadingSpinner color={"green-500"} />;

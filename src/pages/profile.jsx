@@ -3,12 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import theStore from "../store/store";
 import LoadingSpinner from "../assets/loading";
 import ProfileImag from "../assets/profileImag";
-import Addressbook from "../assets/addressBook";
-import LoveHeart from "../assets/loveHeart";
 import Shield from "../assets/shield";
 import List from "../assets/list";
 import Chat from "../assets/chat";
-import Sun from "../assets/sun";
 import ProfilePageContents from "../components/profile page components/ProfilePageContents";
 import getUser from "../functions/getUserInfo.js";
 const ProfilePage = () => {
@@ -40,23 +37,23 @@ const ProfilePage = () => {
   const [section, setSection] = useState("personalInfo");
   //// style
   const style = {
-    sideBar:
-      " bg-gray-100 p-4 rounded-lg shadow-lg sm:col-span-1 h-fit flex flex-col gap-2",
     sideBarContents:
-      "w-full h-fit p-2 flex flex-row gap-4 rounded-lg items-center justify-start  text-black transition duration-300 cursor-pointer hover:bg-gray-200",
+      " py-2 px-4 flex flex-row gap-2 rounded-md transition duration-300 cursor-pointer hover:bg-gray-500",
   };
+
+
   //// rendering
   if (store.user._id) {
     return (
-      <div className="bg-white h-fit sm:grid sm:grid-cols-4 flex flex-col gap-4">
+      <div className="bg-white h-fit flex flex-col gap-2 ">
         {/* side bar */}
-        <div className={style.sideBar}>
+        <div className="bg-gray-700 flex gap-2 flex-row flex-wrap h-fit w-full items-center justify-center p-2 text-white">
           {/* personal information with update functions*/}
           <div
             className={style.sideBarContents}
             onClick={() => setSection("personalInfo")}
           >
-            <ProfileImag color={"black"} />
+            <ProfileImag color={"white"} />
             <h2>my profile</h2>
           </div>
           {/* orders */}
@@ -64,63 +61,40 @@ const ProfilePage = () => {
             className={style.sideBarContents}
             onClick={() => setSection("allUserOrders")}
           >
-            <List color={"black"} />
-            <h2>mu orders</h2>
+            <List color={"white"} />
+            <h2>my orders</h2>
           </div>
-          {/* address book */}
-          <div
-            className={style.sideBarContents}
-            onClick={() => setSection("addressBook")}
-          >
-            <Addressbook color={"black"} />
-            address book
-          </div>
-          {/* wish list */}
-          <div
-            className={style.sideBarContents}
-            onClick={() => setSection("wishList")}
-          >
-            <LoveHeart color={"red"} />
-            <h2>wish list</h2>
-          </div>
+
           {/* security */}
           <div
             className={style.sideBarContents}
             onClick={() => setSection("security")}
           >
-            <Shield color={"blue"} />
+            <Shield color={"white"} />
             <h2>security</h2>
           </div>
-          {/* theme selection */}
-          <div
-            className={style.sideBarContents}
-            onClick={() => setSection("theme")}
-          >
-            <Sun color={"orange"} />
-            <h2>theme</h2>
-          </div>
+
           {/* chat with us */}
           <div
             className={style.sideBarContents}
             onClick={() => setSection("chat")}
           >
-            <Chat color={"green"} />
+            <Chat color={"white"} />
             <h2>chat with us</h2>
           </div>
           {/* go to admin */}
-          {store.user.permesions && (
-            <div>
-              <Link
-                to={"/auth/admin"}
-                className="bg-teal-600 text-white rounded-lg p-2 hover:bg-teal-800 hover:cursor-pointer"
-              >
-                Admin page
-              </Link>
-            </div>
+          {(store.user.permesions == "admin" ||
+            store.user.permesions == "superAdmin") && (
+            <Link
+              to={"/auth/admin"}
+              className="bg-gray-700 text-white rounded-md p-2 hover:bg-gray-500 hover:cursor-pointer w-full text-center"
+            >
+              Admin page
+            </Link>
           )}
         </div>
         {/* content */}
-        <div className="bg-white sm:col-span-3">
+        <div className="bg-white">
           <ProfilePageContents section={section} />
         </div>
       </div>
