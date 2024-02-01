@@ -1,12 +1,12 @@
 function WhoWeAre() {
   return (
-    <div className="w-full p-6 bg-teal-700 text-white rounded-lg my-4 text-lg">
+    <div className="w-5/6 p-6 bg-green-100 text-gray-700 rounded-md text-md m-4">
       <p>
-        At Green Galaxy, we curate a collection of eco-friendly items that blend
-        style with sustainability. Each product is thoughtfully chosen to bring
-        joy to your life while treading lightly on the Earth. From reusable
-        essentials to unique finds, our selection reflects our commitment to a
-        greener, more sustainable lifestyle.
+        At Green Galaxy, we curate a diverse selection of high-quality
+        items to cater to your unique needs and preferences. From
+        fashion-forward apparel to cutting-edge gadgets, each product is chosen
+        with care to ensure it meets our standards of style, functionality, and
+        durability.
       </p>
     </div>
   );

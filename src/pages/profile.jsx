@@ -5,7 +5,6 @@ import LoadingSpinner from "../assets/loading";
 import ProfileImag from "../assets/profileImag";
 import Shield from "../assets/shield";
 import List from "../assets/list";
-import Chat from "../assets/chat";
 import ProfilePageContents from "../components/profile page components/ProfilePageContents";
 import getUser from "../functions/getUserInfo.js";
 const ProfilePage = () => {
@@ -72,15 +71,6 @@ const ProfilePage = () => {
           >
             <Shield color={"white"} />
             <h2>security</h2>
-          </div>
-
-          {/* chat with us */}
-          <div
-            className={style.sideBarContents}
-            onClick={() => setSection("chat")}
-          >
-            <Chat color={"white"} />
-            <h2>chat with us</h2>
           </div>
           {/* go to admin */}
           {(store.user.permesions == "admin" ||

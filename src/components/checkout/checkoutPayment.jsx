@@ -13,7 +13,7 @@ function PaymentPage(props) {
   }
   ///////////
   return (
-    <div className="flex flex-col gap-4 w-full p-4 rounded-lg justify-center ">
+    <div className="flex flex-col gap-4 w-full p-4 rounded-lg justify-center">
       {/* title */}
       <div>
         <h2 className="text-gray-600 bg-gray-100 p-2 rounded-lg">please choose your payment method:</h2>

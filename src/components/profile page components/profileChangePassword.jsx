@@ -44,7 +44,7 @@ function ProfileChangePassword() {
   /// rendering
   return (
     <div>
-      <div className="bg-gray-100 text-gray-700 h-fit w-full p-2 flex flex-col gap-2 rounded-md">
+      <div className="bg-gray-200 text-gray-700 h-fit w-full p-2 flex flex-col gap-2 rounded-md">
         <h2>Change Password:</h2>
         <form
           className=" flex flex-col gap-2 "
@@ -53,7 +53,7 @@ function ProfileChangePassword() {
           <input
             type="password"
             placeholder="new password"
-            className="px-4 py-2 rounded-md outline-0 w-full border border-gray-500"
+            className="px-4 py-2 rounded-md outline-0 w-full border border-gray-300 hover:border-green-500 focus:border-green-500 transtion duration-300"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
@@ -61,7 +61,7 @@ function ProfileChangePassword() {
           <input
             type="password"
             placeholder="confirm password"
-            className="px-4 py-2 rounded-md outline-0 w-full border border-gray-500"
+            className="px-4 py-2 rounded-md outline-0 w-full border border-gray-300 hover:border-green-500 focus:border-green-500 transtion duration-300"
             value={confirmNewPassword}
             onChange={(e) => setConfirmNewPassword(e.target.value)}
             required
@@ -69,7 +69,7 @@ function ProfileChangePassword() {
           <input
             type="password"
             placeholder="current password"
-            className="px-4 py-2 rounded-md outline-0 w-full border border-gray-500"
+            className="px-4 py-2 rounded-md outline-0 w-full border border-gray-300 hover:border-green-500 focus:border-green-500 transtion duration-300"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
             required

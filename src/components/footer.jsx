@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom";
 import colors from "../templates/colors.json";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { subscribeSchema } from "../validation/schemas";
 
 const Footer = () => {
   /// handle subscribes
   let [email, setEmail] = useState("");
-  let [msg, setMsg] = useState({
-    error: "",
-    success: "",
-  });
-
+  let [msg, setMsg] = useState("");
+  ///
+  const dialog = useRef(null);
+  function handleDialog() {
+    dialog.current.showModal();
+  }
   /// new subscriber function
   function newSubscriber(e) {
     e.preventDefault();
@@ -34,26 +35,19 @@ const Footer = () => {
         body: JSON.stringify({ email }),
       }
     )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) {
-          data.message === "Validation error"
-            ? setMsg({
-                ...msg,
-                error: "please enter a valid email",
-                success: "",
-              })
-            : setMsg({ ...msg, error: "", success: data.message });
-        } else {
-          setMsg({ ...msg, error: data.error, success: "" });
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else if (res.status == 400) {
+          setMsg("please enter a valid email");
         }
-        console.clear();
+      })
+      .then((data) => {
+        setMsg(data.message);
+
         setTimeout(() => {
           setEmail("");
-          setMsg({
-            error: "",
-            success: "",
-          });
+          setMsg("");
         }, 3000);
       });
   }
@@ -74,28 +68,43 @@ const Footer = () => {
                 <Link to="/faqs">FAQs</Link>
               </li>
               <li>
-                <Link to="/shipping">Shipping</Link>
-              </li>
-              <li>
-                <Link to="/returns">Returns</Link>
+                <Link to="/refund-policy">refund policy</Link>
               </li>
             </ul>
           </div>
 
           <div className="mb-6 w-2/6">
             <h2 className="text-lg font-semibold mb-3">Connect</h2>
+            <dialog ref={dialog} className="rounded-md p-4 outline-0">
+              <div className="rounded-md p-4 text-gray-700 bg-white w-[500px] flex flex-col gap-4">
+                <p>
+                  Thank you for your interest! Currently, we're not on social
+                  media, but stay tuned for updates. We're working on
+                  establishing our presence, and we look forward to connecting
+                  with you soon. In the meantime, feel free to reach out through
+                  our website or other contact channels. Your support means the
+                  world to us!
+                </p>
+                <button
+                  className="bg-red-500 text-white py-1 px-2 rounded "
+                  onClick={() => dialog.current.close()}
+                >
+                  close
+                </button>
+              </div>
+            </dialog>
             <ul className="space-y-2">
-              <li>
-                <a href="#">Facebook</a>
+              <li onClick={handleDialog}>
+                <p className="cursor-pointer">Facebook</p>
               </li>
-              <li>
-                <a href="#">Instagram</a>
+              <li onClick={handleDialog}>
+                <p className="cursor-pointer">Instagram</p>
               </li>
-              <li>
-                <a href="#">Twitter</a>
+              <li onClick={handleDialog}>
+                <p className="cursor-pointer">Twitter</p>
               </li>
-              <li>
-                <a href="#">Pinterest</a>
+              <li onClick={handleDialog}>
+                <p className="cursor-pointer">Pinterest</p>
               </li>
             </ul>
           </div>
@@ -113,7 +122,6 @@ const Footer = () => {
                 className="w-full px-4 py-2 rounded-md bg-white text-gray-900"
                 value={email}
                 onChange={(e) => {
-                  setMsg({ error: "", success: "" });
                   setEmail(e.target.value);
                 }}
                 required
@@ -124,16 +132,11 @@ const Footer = () => {
               >
                 Subscribe
               </button>
-              {msg?.error ? (
-                <p className="text-red-500 bg-white w-fit h-fit rounded-lg  p-1 m-1">
-                  {msg.error}
-                </p>
-              ) : null}
-              {msg.success ? (
-                <p className="text-green-500 bg-white w-fit h-fit rounded p-1 m-1">
-                  {msg.success}
-                </p>
-              ) : null}
+              {msg && (
+                <div className="bg-white w-fit rounded-md p-2 text-gray-700">
+                  {msg}
+                </div>
+              )}
             </form>
           </div>
         </div>

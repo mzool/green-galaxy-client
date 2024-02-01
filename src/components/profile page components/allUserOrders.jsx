@@ -1,9 +1,13 @@
 import getAllUserOrdersHandler from "./functions/getAllUserOrders";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import OrderInfo from "../trackorder/showOrder";
 import cancelOrder from "./functions/cancelOrder.js";
 import LoadingSpinner from "../../assets/loading.jsx";
+import theStore from "../../store/store.js";
+
 function AllOrders() {
+  /// store
+  const { store } = useContext(theStore);
   /// orders
   const [orders, setOrders] = useState([]);
   /// show order info
@@ -15,12 +19,16 @@ function AllOrders() {
   const [msg, setMsg] = useState("");
   /// get all orders
   useEffect(() => {
+    if (store.orders?.length > 0) {
+      return setOrders(store.orders);
+    }
     setFetching(true);
     getAllUserOrdersHandler()
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.allOrders.length > 0) {
           setOrders(data.allOrders);
+          store.updateOrders(data.allOrders);
         } else {
           setMsg(data.message);
         }
@@ -29,6 +37,7 @@ function AllOrders() {
         setFetching(false);
       });
   }, []);
+
   /// rendering
   if (fetching) {
     return <LoadingSpinner color={"green-500"} />;
@@ -52,7 +61,7 @@ function AllOrders() {
       <h2 className="font-bold w-full bg-green-600 text-white p-2 rounded-md text-center">
         All Orders:
       </h2>
-      <div className="flex flex-row flex-warp p-2 gap-4">
+      <div className="flex flex-row flex-wrap p-2 gap-4 w-full justify-center">
         {orders.map((order) => (
           <div
             key={order.orderNumber}

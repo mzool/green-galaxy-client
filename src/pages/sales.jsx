@@ -28,7 +28,7 @@ function Sales() {
   }
   return (
     <div className="bg-white w-full h-fit p-4 flex flex-col gap-10 text-center min-h-screen text-lg text-gray-700">
-      <h2>All Sales Items:</h2>
+      <h2 className="bg-gray-700 text-white font-bold p-2 rounded-md">On Sales Items:</h2>
       {onSaleItems.length > 0 ? (
         <div className="flex flex-row flex-wrap gap-4 items-center justify-center">
           {onSaleItems.map((item) => (
@@ -38,6 +38,7 @@ function Sales() {
               price={item.productPrice}
               imageUrl={item.productImgs[0]}
               productLink={`../products/${item.productId}`}
+              discount={item.productDiscount}
             />
           ))}
         </div>

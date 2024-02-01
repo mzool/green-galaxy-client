@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import theStore from "../../store/store.js";
+import ThankYou from "./thankyou.jsx";
 function ConfirmOrder(props) {
   const { store } = useContext(theStore);
   /// get props
@@ -64,16 +65,15 @@ function ConfirmOrder(props) {
           }
           setFetching(false);
           setCompleted(true);
-          setTimeout(() => {
-            store.updateCart({});
-            window.location.href = "/";
-          }, 5000);
         });
     } else {
-      return
+      return;
     }
   }
   ///////////////////////// rendering
+  if (completed && !isFetching) {
+    return <ThankYou store={store} />;
+  }
   return (
     <div className="flex flex-col gap-2 bg-white p-4 justify-start font-semibold text-gray-700 rounded-lg w-full h-fit border-2 border-zinc-500">
       {/* confirm your order */}
@@ -180,11 +180,6 @@ function ConfirmOrder(props) {
         {message.err && (
           <div className="p-4 text-red-500">
             <h2>{message.err}</h2>
-          </div>
-        )}
-        {message.msg && (
-          <div className="p-4 text-green-500">
-            <h2>{message.msg}</h2>
           </div>
         )}
       </div>

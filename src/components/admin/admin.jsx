@@ -8,7 +8,7 @@ import GetAllEmployess from "./adminComponents/employees/getAllEmployess";
 import MainDashboard from "./adminComponents/dashboard/mainDashboard";
 function Admin({rule}) {
   /// set search params
-  let [page, setPage] = useState("dashboard");
+  let [page, setPage] = useState("users");
   /// style
   const style = {
     btn: "w-fit py-2 px-4 flex flex-row gap-2 items-center justify-center hover:bg-gray-500",

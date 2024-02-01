@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
 import ProductCard from "../product/product_card";
 import getNewItems from "./functions/getNewProducts.js";
+import theStore from "../../store/store.js";
 
 function NewProducts() {
-  /// new items
-  const [newItems, setNewItems] = useState([]);
+  const { store } = useContext(theStore);
   /// get new items
   useEffect(() => {
+    if (store.newProducts.length > 0) {
+      return;
+    }
     getNewItems()
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setNewItems(
+          store.updateNewProducts(
             data.products.filter((pr) => {
               return pr.newProduct;
             })
@@ -19,16 +22,17 @@ function NewProducts() {
         }
       });
   }, []);
+
   /// rendering
-  if (newItems.length === 0) {
+  if (store.newProducts.length === 0) {
     return <>loading...</>;
   }
   return (
-    <div className="flex flex-col gap-4 w-full h-fit p-4 bg-gray-50">
-      <h2 className="text-xl">New Items:</h2>
-      {newItems.length > 0 && (
+    <div className="flex flex-col gap-4 w-full h-fit p-4">
+      <h2 className="text-xl w-full bg-green-50 p-2 rounded-md">New Items:</h2>
+      {store.newProducts.length > 0 && (
         <div className="flex flex-row gap-4 flex-wrap items-center justify-center">
-          {newItems.map((item) => (
+          {store.newProducts.map((item) => (
             <ProductCard
               key={item.productId}
               title={item.productName}
