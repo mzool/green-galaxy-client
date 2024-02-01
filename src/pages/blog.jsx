@@ -22,11 +22,6 @@ function Blog() {
           mode: "cors",
           method: "get",
           credentials: "include",
-          headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
-          },
         }
       )
         .then((res) => res.json())
