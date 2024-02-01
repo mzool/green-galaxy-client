@@ -1,12 +1,36 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import theStore from "../../store/store.js";
+import getAllProductsForFilter from "./handlers/getAllProducts.js";
 
 function Filter({ getFilteredProduct }) {
+  const { store } = useContext(theStore);
   /// filter functionality
   const [filter, setFilter] = useState({
     price: "",
     category: "",
     color: "",
   });
+  const [allCategories, setAllCategories] = useState([]);
+  const [allColors, setAllColors] = useState([]);
+  /// get all categories
+  useEffect(() => {
+    getAllProductsForFilter()
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setAllCategories(
+            data.products.map((pr) => {
+              return pr.productCategory;
+            })
+          );
+          setAllColors(
+            data.products.map((pr) => {
+              return pr.colors;
+            })
+          );
+        }
+      });
+  }, []);
   /// msg
   const [msg, setMsg] = useState("");
   ///
@@ -41,6 +65,7 @@ function Filter({ getFilteredProduct }) {
           getFilteredProduct(data.filteredProducts);
         } else {
           setMsg("No items found, try to search for less parameters");
+          setFilter({ price: "", category: "", color: "" });
         }
       })
       .finally(() => {
@@ -55,41 +80,70 @@ function Filter({ getFilteredProduct }) {
       <h1 className="text-xl">filter:</h1>
       {/* form */}
       <form
-        className="grid sm:grid-cols-4 gap-2 h-fit items-center justify-center"
+        className="flex flex-row flex-wrap gap-2 items-center justify-center"
         onSubmit={getFiltered}
       >
         {/* price */}
-        <div className="price w-full">
+        <div className="price flex flex-row flex-wrap gap-2 items-center justify-center">
+          <label htmlFor="maxPrice">maximum price:</label>
           <input
+            id="maxPrice"
             type="number"
-            placeholder="maximum price"
             value={filter.price}
             onChange={(e) => setFilter({ ...filter, price: e.target.value })}
-            className="rounded-lg bg-white text-gray-600 outline-0 p-2 text-center w-full"
+            className="rounded-lg bg-white text-gray-600 outline-0 p-1 text-center"
           />
         </div>
         {/* category */}
-        <div className="category w-full h-fit">
-          <input
-            type="text"
-            placeholder="category"
-            className="rounded-lg bg-white text-gray-600 outline-0 p-2 text-center w-full"
+        <div className="category h-fit flex flex-row flex-wrap gap-2 items-center justify-center">
+          <label htmlFor="category">category:</label>
+          <select
+            name="category"
+            id="category"
+            onChange={(e) =>
+              setFilter((pr) => ({ ...pr, category: e.target.value }))
+            }
+            className="p-2 rounded-md bg-white text-gray-700"
             value={filter.category}
-            onChange={(e) => setFilter({ ...filter, category: e.target.value })}
-          />
+          >
+            <option value="">select wanted category</option>
+            {allCategories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
         {/* color */}
-        <div className="color w-full h-fit">
-          <input
-            type="text"
-            placeholder="Color"
-            className="rounded-lg bg-white text-gray-600 outline-0 p-2 text-center w-full"
+        <div className="color h-fit flex flex-row flex-wrap gap-2 items-center justify-center">
+          <label htmlFor="category">color:</label>
+          <select
+            name="color"
+            id="color"
+            onChange={(e) =>
+              setFilter((pr) => ({ ...pr, color: e.target.value }))
+            }
+            className="p-2 rounded-md bg-white text-gray-700"
             value={filter.color}
-            onChange={(e) => setFilter({ ...filter, color: e.target.value })}
-          />
+          >
+            <option value="">select wanted color:</option>
+            {allColors.map((color, index) =>
+              color
+                ? color.map((cl) => (
+                    <option
+                      key={`${index}-${cl}`}
+                      value={cl}
+                      style={{ backgroundColor: cl }}
+                    >
+                      {cl}
+                    </option>
+                  ))
+                : null
+            )}
+          </select>
         </div>
         {/* submit */}
-        <div className="w-full">
+        <div className="w-3/6">
           <input
             disabled={searching}
             type="submit"

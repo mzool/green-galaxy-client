@@ -65,7 +65,7 @@ function Drawer() {
     style:
       "flex flex-row gap-1 justify-center items-center text-white hover:text-emerald-500 rounded p-1 transition duration-300 ease-in-out aria-[current=page]:m-3 aria-[current=page]:bg-black aria-[current=page]:bg-opacity-50 aria-[current=page]:text-white",
   };
-
+//// rendering
   return (
     <div
       className={`flex flex-row bg-green-600 min-h-10 h-fit w-full p-4 items-center z-10  ${

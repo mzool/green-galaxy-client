@@ -3,7 +3,6 @@ import { useContext, useState, useEffect, useRef } from "react";
 import theStore from "../../store/store";
 import profileImg from "../../assets/profileImg.svg";
 import Drawer from "./drawer";
-import GetCart from "../../functions/getCart.js";
 const Navbar = () => {
   /// navigate
   const navigate = useNavigate();
@@ -65,9 +64,7 @@ const Navbar = () => {
   useEffect(() => {
     document.addEventListener("wheel", (e) => handleWheel(e));
     document.addEventListener("keydown", handleSearchKeyPress);
-    setTimeout(() => {
-      GetCart(store);
-    }, 2000);
+
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
     };

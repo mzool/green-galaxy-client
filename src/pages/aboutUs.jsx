@@ -1,114 +1,86 @@
 function AboutUs() {
   return (
-    <div
-      className={"flex flex-col gap-5 mt-5 mb-5 p-5 text-md text-gray-700 items-center justify-center w-full h-full bg-white"}
-    >
+    <div className="flex flex-col gap-2 mt-5 mb-5 p-5 text-md text-gray-700 items-center justify-center w-full h-full bg-white">
       <div className="md:w-4/6 lg:w-3/6 sm:w-4/6 w-full">
         <div className="title text-4xl">
-          <h1 className="SM:text-4xl bold mb-5">About Green Galaxy</h1>
+          <h1 className="sm:text-4xl font-bold mb-5">About Green Galaxy</h1>
         </div>
         <div className="main flex flex-col gap-10">
           <div>
             <p>
-              Welcome to Green Galaxy, your premier destination for sustainable
-              and eco-conscious living. We are more than just an e-commerce
-              store; we are on a mission to promote a greener and more
-              environmentally responsible lifestyle. At Green Galaxy, we believe
-              that every choice we make can have a positive impact on our
-              planet, and we're here to make those choices easier for you.
+              At Green Galaxy, we believe in making your shopping experience
+              more than just a transaction. It's an exploration of curated
+              collections, a journey through the latest trends, and a
+              celebration of individuality. Our commitment is to provide you
+              with a seamless and enjoyable experience that goes beyond the
+              ordinary.
             </p>
           </div>
           <div>
-            <h2 className="sm:text-3xl underline m-4">
-              Our Commitment to Sustainability
-            </h2>
+            <h2 className="sm:text-3xl underline m-4">Our Story</h2>
             <p>
-              At Green Galaxy, sustainability is not just a buzzword; it's the
-              core of our existence. We are committed to offering you a curated
-              selection of eco-friendly products that are thoughtfully sourced,
-              ethically produced, and designed to reduce our collective carbon
-              footprint. Our team of experts meticulously handpicks each item,
-              ensuring that it meets our strict sustainability criteria.
+              Green Galaxy was born out of a desire to create an online haven
+              for those who seek more than just products – they seek
+              inspiration. Founded by a team of enthusiasts who share a deep
+              love for fashion, technology, and customer-centricity, our store
+              reflects a blend of creativity and functionality. From the outset,
+              our mission has been clear: to offer a carefully curated selection
+              of products that resonate with your lifestyle. Whether you're a
+              fashion-forward trendsetter, a tech enthusiast, or someone seeking
+              unique lifestyle products, we've got you covered. Every item in
+              our store is handpicked, ensuring that it meets our standards of
+              quality, style, and innovation.
             </p>
           </div>
           <div>
-            <h2 className="sm:text-3xl underline m-4">
-              A World of Eco-Friendly Products
-            </h2>
-            <p>
-              Explore a world of eco-friendly possibilities when you shop with
-              us. From biodegradable household essentials to stylish, upcycled
-              fashion, our range of products is as diverse as it is sustainable.
-              Whether you are looking for natural skincare, reusable
-              kitchenware, or eco-conscious fashion, Green Galaxy is your
-              one-stop destination.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="sm:text-3xl underline m-4">Our Green Values</h2>
-            <ul className="list-disc">
+            <h2 className="sm:text-3xl underline m-4"> What Sets Us Apart:</h2>
+            <ol className="list-decimal">
               <li>
-                Environmental Stewardship: We take our role as caretakers of the
-                environment seriously. Our packaging is minimalistic and
-                recyclable, and we actively work towards reducing waste in every
-                aspect of our business.
+                Curated Collections: Our team of experts curates collections
+                that reflect the latest trends, ensuring that you stay ahead of
+                the curve.
               </li>
               <li>
-                Transparency: We believe in full transparency. You can trace the
-                journey of our products from their source to your doorstep,
-                ensuring you know exactly what you're buying and where it comes
-                from.
+                Discover a diverse range of products that cater to your unique
+                tastes.
               </li>
               <li>
-                Community Engagement: We support and partner with local and
-                global environmental organizations, giving back to the
-                communities that share our vision of a greener future.
+                Quality Assurance: We prioritize quality in every product we
+                offer. Each item undergoes a rigorous selection process to
+                guarantee durability, functionality, and a touch of excellence.
               </li>
-            </ul>
+              <li>
+                Exceptional Service: Your satisfaction is our priority. Our
+                dedicated customer support team is always ready to assist you,
+                whether you have questions about products, need help with the
+                ordering process, or require post-purchase support.
+              </li>
+              <li>
+                Innovation Hub: Green Galaxy is not just a shopping destination;
+                it's an innovation hub. Stay informed about the latest tech
+                innovations, fashion trends, and lifestyle updates through our
+                engaging blog and community forums.
+              </li>
+            </ol>
           </div>
         </div>
-        <div>
-          <h2 className="sm:text-3xl underline m-4">Why Choose Green Galaxy?</h2>
-          <ol className="list-decimal">
-            <li>
-              Quality Assurance: We stand by the quality of our products. Every
-              item is thoroughly tested and approved by our team of experts to
-              ensure it meets our high standards.
-            </li>
-            <li>
-              Eco-Friendly Shipping: Our shipping practices are eco-conscious,
-              with a focus on minimizing our carbon footprint. We also offer
-              carbon-neutral shipping options.
-            </li>
-            <li>
-              Customer-Centric Approach: Your satisfaction is our top priority.
-              Our responsive customer support team is here to assist you with
-              any queries or concerns you may have.
-            </li>
-            <li>
-              Educational Resources: Green Galaxy is not just a store; it's a
-              resource hub for eco-conscious living. Explore our blog for
-              informative articles, guides, and tips on sustainable living.
-            </li>
-            <li>
-              Join the Green Movement: By choosing Green Galaxy, you become a
-              part of a global movement towards a more sustainable future. Every
-              purchase you make with us contributes to a greener planet.
-            </li>
-          </ol>
-        </div>
-        <div>
-          <h2 className="sm:text-3xl underline m-4">Get in Touch</h2>
+        <div className="flex flex-col gap-2">
+          <h2 className="sm:text-3xl underline m-4">Our Commitment to You: </h2>
           <p>
-            We invite you to join us on this exciting journey towards a more
-            sustainable and eco-friendly world. Explore our store, learn from
-            our resources, and be a part of the Green Galaxy community. If you
-            have any questions, suggestions, or feedback, please don't hesitate
-            to get in touch with us. Together, we can make a positive impact on
-            the planet we call home. Thank you for choosing Green Galaxy, where
-            eco-conscious shopping meets a brighter future.
+            When you shop at Green Galaxy, you're not just making a purchase;
+            you're joining a community. A community that values diversity,
+            creativity, and the joy of discovering new things. We are committed
+            to fostering a space where everyone feels welcome, represented, and
+            inspired. As we continue to grow, our commitment to providing you
+            with an unparalleled shopping experience remains steadfast. Expect
+            more exciting products, exclusive deals, and a platform that evolves
+            with your needs. Thank you for choosing Green Galaxy as your
+            preferred online shopping destination. Explore, shop, and join us in
+            creating a world where style meets innovation, and every purchase is
+            a memorable experience.
           </p>
+          <strong> Happy shopping!</strong>
+          <strong> Mohammad Basem</strong>
         </div>
       </div>
     </div>

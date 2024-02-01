@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { loginSchema } from "../validation/schemas";
 import { useContext, useEffect, useState, useRef } from "react";
 import theStore from "../store/store";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../assets/loading";
 import getUser from "../functions/getUserInfo.js";
 import login from "../functions/loginFetch.js";
@@ -17,8 +17,6 @@ const LoginPage = () => {
   const [fetchingDialog, setFetchingDialog] = useState(false);
   /// navigate
   const navigate = useNavigate();
-  /// location
-  const location = useLocation();
   /// get the global store
   let { store } = useContext(theStore);
   /// get user info
@@ -62,8 +60,10 @@ const LoginPage = () => {
             setErrMsg("invalid email or password");
           } else {
             res.json().then((data) => {
-              if (data.success) {
+              if (data.success && !data.towStepsLogin) {
                 navigate("/profile");
+              } else if (data.success && data.towStepsLogin) {
+                navigate(`/login/otp-form?token=${data.token}`);
               } else {
                 setErrMsg(data.message);
               }
@@ -181,8 +181,8 @@ const LoginPage = () => {
                   access your account and change it
                 </p>
                 <p className="text-xs text-red-500">
-                  ** this password is valid just for one time login process, even
-                  if you logged in using current password{" "}
+                  ** this password is valid just for one time login process,
+                  even if you logged in using current password{" "}
                 </p>
                 <label htmlFor="email">enter your email address:</label>
                 <input

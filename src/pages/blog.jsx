@@ -66,14 +66,15 @@ function Blog() {
             <Link
               to={`/blogs/${blog.blog_id}`}
               key={index}
-              className={`w-full h-96 p-4 bg-gray-100 rounded-lg text-gray-600 grid sm:grid-rows-6 gap-2 items-center justify-center cursor-pointer hover:contrast-150 transition duration-300`}
+              className={`w-full h-96 p-4 rounded-lg text-gray-600 grid sm:grid-rows-6
+               gap-2 items-center justify-center cursor-pointer hover:contrast-150 transition duration-300`}
             >
               {/* image */}
               <div className="row-span-5 w-full h-full">
                 <img
                   src={blog.CoverImage}
                   alt={blog.title}
-                  className="h-full w-full"
+                  className="h-full w-full rounded"
                 />
               </div>
               <div className="row-span-1 p-2">
@@ -86,7 +87,7 @@ function Blog() {
       </div>
       {/* more blogs */}
       <button
-        className="w-full h-10 bg-gray-100 flex items-center justify-center p-4 hover:bg-zinc-200 transition ease-on-out duration-300"
+        className="w-full h-10 bg-gray-100 flex items-center justify-center p-4 hover:bg-gray-200 transition ease-on-out duration-300"
         onClick={moreBlogs}
       >
         <svg
