@@ -8,8 +8,6 @@ async function placeOrder(data) {
                 credentials: "include",
                 headers: {
                     "content-type": "application/json",
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
                 },
                 body: JSON.stringify(data),
             }

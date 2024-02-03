@@ -1,36 +1,23 @@
-import { useState, useContext, useEffect } from "react";
-import theStore from "../../store/store.js";
-import getAllProductsForFilter from "./handlers/getAllProducts.js";
+import { useState, useEffect } from "react";
 
-function Filter({ getFilteredProduct }) {
-  const { store } = useContext(theStore);
+function Filter({ getFilteredProduct, productsData }) {
   /// filter functionality
   const [filter, setFilter] = useState({
     price: "",
     category: "",
-    color: "",
   });
   const [allCategories, setAllCategories] = useState([]);
-  const [allColors, setAllColors] = useState([]);
   /// get all categories
   useEffect(() => {
-    getAllProductsForFilter()
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setAllCategories(
-            data.products.map((pr) => {
-              return pr.productCategory;
-            })
-          );
-          setAllColors(
-            data.products.map((pr) => {
-              return pr.colors;
-            })
-          );
-        }
-      });
-  }, []);
+    let categories = [];
+    productsData.forEach((pr) => {
+      if (!categories.includes(pr.productCategory)) {
+        categories.push(pr.productCategory);
+      }
+    });
+    setAllCategories(categories);
+   
+  }, [productsData]);
   /// msg
   const [msg, setMsg] = useState("");
   ///
@@ -38,7 +25,7 @@ function Filter({ getFilteredProduct }) {
   //////////////// handle filter
   function getFiltered(e) {
     e.preventDefault();
-    if (!filter.category && !filter.color && !filter.price) {
+    if (!filter.category && !filter.price) {
       return setMsg("no filter option filled");
     }
     setSearching(true);
@@ -51,9 +38,6 @@ function Filter({ getFilteredProduct }) {
         mode: "cors",
         credentials: "include",
         headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
           "content-type": "application/json",
         },
         body: JSON.stringify(filter),
@@ -65,12 +49,12 @@ function Filter({ getFilteredProduct }) {
           getFilteredProduct(data.filteredProducts);
         } else {
           setMsg("No items found, try to search for less parameters");
-          setFilter({ price: "", category: "", color: "" });
+          setFilter({ price: "", category: ""});
         }
       })
       .finally(() => {
         setSearching(false);
-        setFilter({ price: "", category: "", color: "" });
+        setFilter({ price: "", category: ""});
       });
   }
   //// rendering
@@ -112,34 +96,6 @@ function Filter({ getFilteredProduct }) {
                 {category}
               </option>
             ))}
-          </select>
-        </div>
-        {/* color */}
-        <div className="color h-fit flex flex-row flex-wrap gap-2 items-center justify-center">
-          <label htmlFor="category">color:</label>
-          <select
-            name="color"
-            id="color"
-            onChange={(e) =>
-              setFilter((pr) => ({ ...pr, color: e.target.value }))
-            }
-            className="p-2 rounded-md bg-white text-gray-700"
-            value={filter.color}
-          >
-            <option value="">select wanted color:</option>
-            {allColors.map((color, index) =>
-              color
-                ? color.map((cl) => (
-                    <option
-                      key={`${index}-${cl}`}
-                      value={cl}
-                      style={{ backgroundColor: cl }}
-                    >
-                      {cl}
-                    </option>
-                  ))
-                : null
-            )}
           </select>
         </div>
         {/* submit */}

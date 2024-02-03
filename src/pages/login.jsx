@@ -23,6 +23,7 @@ const LoginPage = () => {
   //// is fetching for rendering controll
   const [isFetching, setIsFetching] = useState(false);
   useEffect(() => {
+    window.scrollTo(0, 0);
     /// check store
     if (store.user._id) {
       navigate("/profile");

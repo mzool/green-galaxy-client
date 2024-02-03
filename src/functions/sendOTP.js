@@ -6,10 +6,6 @@ async function sendOTP(){
             method: "get",
             mode: "cors",
             credentials: "include",
-            headers: {
-                Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                    }`,
-            },
         }
     )
     return promise

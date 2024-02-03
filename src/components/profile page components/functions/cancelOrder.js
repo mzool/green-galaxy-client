@@ -8,8 +8,6 @@ async function changePasswordHandler(orderNumber, userEmail) {
                 method: "PUT",
                 mode: "cors",
                 headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
                     'content-type': "application/json"
                 },
                 credentials: "include",

@@ -13,6 +13,7 @@ function GetBlog() {
   });
   /// fetching
   useEffect(() => {
+    window.scrollTo(0, 0);
     try {
       fetch(
         `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
@@ -22,9 +23,6 @@ function GetBlog() {
           method: "get",
           mode: "cors",
           headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
             blog_id: blog_id,
           },
         }

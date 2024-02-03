@@ -13,6 +13,7 @@ function Blog() {
   });
   /// get all blogs
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (store.blogs.length == 0) {
       fetch(
         `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${

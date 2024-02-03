@@ -14,6 +14,7 @@ const RegisterPage = () => {
   /// get user info
   let [isFetch, setFetch] = useState(true);
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!store.user._id) {
       getUser()
         .then((res) => res.json())

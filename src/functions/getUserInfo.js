@@ -7,10 +7,6 @@ async function getUser() {
                 method: "GET",
                 mode: "cors",
                 credentials: "include",
-                headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
-                },
             }
         );
         return promise

@@ -7,8 +7,6 @@ async function deleteProduct(productId, confirmProductId) {
                 method: "DELETE",
                 mode: "cors",
                 headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
                     'content-type': "application/json"
                 },
                 credentials: "include",

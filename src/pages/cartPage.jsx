@@ -14,6 +14,7 @@ function CartPage() {
   let [msg, setMsg] = useState("");
   /// get cart items from server
   useEffect(() => {
+    window.scrollTo(0, 0);
     setFetching(true);
     GetCart(store).finally(() => setFetching(false));
   }, []);
@@ -115,28 +116,30 @@ function CartPage() {
                 </div>
               </div>
               {/* cart items */}
-            { (item.color || item.size || item.otherVarients)  && <div className="flex flex-col gap-2 justify-center items-center">
-                {item.color && (
-                  <div className="flex flex-row gap-2">
-                    <p>color:</p>{" "}
-                    <div
-                      className="w-6 h-6 rounded"
-                      style={{ backgroundColor: item.color }}
-                    ></div>
-                  </div>
-                )}
+              {(item.color || item.size || item.otherVarients) && (
+                <div className="flex flex-col gap-2 justify-center items-center">
+                  {item.color && (
+                    <div className="flex flex-row gap-2">
+                      <p>color:</p>{" "}
+                      <div
+                        className="w-6 h-6 rounded"
+                        style={{ backgroundColor: item.color }}
+                      ></div>
+                    </div>
+                  )}
 
-                {item.size && (
-                  <div className="flex flex-row gap-2">
-                    <p>size:</p> <p>{item.size}</p>
-                  </div>
-                )}
-                {item.otherVarients && (
-                  <div className="flex flex-row gap-2">
-                    <p>varients:</p> <p>{item.otherVarients}</p>
-                  </div>
-                )}
-              </div>}
+                  {item.size && (
+                    <div className="flex flex-row gap-2">
+                      <p>size:</p> <p>{item.size}</p>
+                    </div>
+                  )}
+                  {item.otherVarients && (
+                    <div className="flex flex-row gap-2">
+                      <p>varients:</p> <p>{item.otherVarients}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* quantity */}
               <div className="flex flex-col gap-2 items-center justify-center">

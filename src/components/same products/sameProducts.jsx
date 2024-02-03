@@ -1,9 +1,41 @@
-import React from 'react'
+import { useEffect, useState, useContext } from "react";
+import ProductCard from "../product/product_card";
+import theStore from "../../store/store.js";
 
-function SameProcuts() {
-  return (
-    <div className='w-full h-fit min-h-32 bg-white flex flex-row gap-4 mt-10'>SameProcuts</div>
-  )
+function SameProcuts({ category }) {
+  const { store } = useContext(theStore);
+  const [sameProducts, setSameProducts] = useState([]);
+  /// get the products with same category
+  useEffect(() => {
+    setSameProducts(
+      store?.products?.filter((pr) => {
+        return pr.productCategory == category;
+      })
+    );
+  }, []);
+
+  /// rendering
+  if (sameProducts.length > 0) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <p className="font-semibold text-gray-700 text-lg">
+          People also Purchased:
+        </p>
+        <div className="w-full h-fit bg-white flex flex-row gap-4 rounded-md">
+          {sameProducts.map((pr) => (
+            <ProductCard
+              key={pr.productId}
+              title={pr.productName}
+              price={pr.productPrice}
+              imageUrl={pr.productImgs[0]}
+              productLink={`/products/${pr.productId}`}
+              discount={pr.productDiscount}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 }
 
-export default SameProcuts
+export default SameProcuts;

@@ -6,10 +6,6 @@ async function getAllAdmins() {
             {
                 method: "GET",
                 mode: "cors",
-                headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
-                },
                 credentials: "include",
             }
         );

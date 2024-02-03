@@ -94,7 +94,7 @@ function App() {
         ...prevStore,
         newProducts,
       }));
-    },
+    },    
   });
 
   return (

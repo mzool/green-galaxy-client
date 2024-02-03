@@ -30,6 +30,7 @@ function Product() {
   /// get the product data
   const [product, setProduct] = useState({});
   useEffect(() => {
+    window.scrollTo(0, 0);
     getProductData(productUrl)
       .then((res) => res.json())
       .then((data) => {
@@ -159,13 +160,13 @@ function Product() {
               </button>
             </div>
             {/*********************************** payment options  ***********************************/}
-            <PaymentOptions />
+            {/* <PaymentOptions /> */}
           </div>
         </div>
         {/*********************************** reviwes  ***********************************/}
-        <Reviews />
+        {/* <Reviews /> */}
         {/*********************************** users also purchase  ***********************************/}
-        <SameProcuts />
+        <SameProcuts category={product.productCategory}/>
       </div>
     );
 }

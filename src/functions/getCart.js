@@ -6,10 +6,6 @@ async function GetCart(store){
             method: "get",
             mode: "cors",
             credentials: "include",
-            headers: {
-                Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                    }`,
-            },
         }
     )
         .then((res) => res.json())

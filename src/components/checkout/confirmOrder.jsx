@@ -43,9 +43,6 @@ function ConfirmOrder(props) {
           credentials: "include",
           headers: {
             "content-type": "application/json",
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
           },
           body: JSON.stringify(body),
         }

@@ -7,8 +7,6 @@ async function updateOrderStatusHandler(order_id, orderStatus, details) {
                 method: "PUT",
                 mode: "cors",
                 headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
                     'content-type': "application/json"
                 },
                 credentials: "include",
