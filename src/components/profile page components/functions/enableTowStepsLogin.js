@@ -7,10 +7,6 @@ async function enableTowStepsLoginHandler() {
             {
                 method: "PUT",
                 mode: "cors",
-                headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
-                },
                 credentials: "include",
             }
         );

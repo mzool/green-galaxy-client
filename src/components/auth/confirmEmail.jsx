@@ -14,11 +14,6 @@ function ConfirmEmail() {
       {
         method: "get",
         mode: "cors",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-        },
         credentials: "include",
       }
     ).then((res) => {

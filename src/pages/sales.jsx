@@ -9,6 +9,7 @@ function Sales() {
   /// fetch server
   const [fetching, setFetching] = useState(true);
   useEffect(() => {
+    window.scrollTo(0, 0);
     getAllProducts()
       .then((res) => res.json())
       .then((data) => {

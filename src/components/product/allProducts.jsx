@@ -25,11 +25,6 @@ function AllProducts() {
         {
           method: "GET",
           mode: "cors",
-          headers: {
-            Authorization: `GreenBearer ${
-              import.meta.env.VITE_authorization_token
-            }`,
-          },
         }
       )
         .then((res) => res.json())
@@ -90,7 +85,7 @@ function AllProducts() {
   return (
     <div className="h-fit w-full bg-white flex flex-col items-center gap-4 p-4">
       {/* filter component ***************************************************************************************/}
-      <Filter getFilteredProduct={setFilteredProduct} />
+      <Filter getFilteredProduct={setFilteredProduct} productsData={store.products} />
       {/* all products  ********************************************************************************************************8*/}
       <div className="flex sm:flex-row sm:flex-wrap flex-col p-2 gap-10 bg-gray-100 w-full h-fit justify-center items-center">
         {store.products.map((product) => {

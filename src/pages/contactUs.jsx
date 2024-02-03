@@ -25,7 +25,7 @@ function Contact() {
       if (formData[key].length == 0) {
         setMsgs({ msg: "", err: "fill all fields" });
         isDataFilled = false;
-        setIsFetching(false)
+        setIsFetching(false);
       }
     }
     if (isDataFilled === false) {
@@ -36,7 +36,7 @@ function Contact() {
       .catch((err) => {
         setMsgs({ err: err.message, msg: "" });
         isDataValid = false;
-        setIsFetching(false)
+        setIsFetching(false);
       })
       .then(() => {
         if (isDataValid) {
@@ -49,9 +49,6 @@ function Contact() {
               mode: "cors",
               credentials: "include",
               headers: {
-                Authorization: `GreenBearer ${
-                  import.meta.env.VITE_authorization_token
-                }`,
                 "content-type": "application/json",
               },
               body: JSON.stringify(formData),
@@ -95,7 +92,7 @@ function Contact() {
     btn: "bg-green-600 rounded text-white text-xl p-2 hover:bg-green-500 w-full transition ease-in-out duration-300",
   };
   /// rendering
-  
+
   return (
     <div className={style.parent}>
       {/* form */}

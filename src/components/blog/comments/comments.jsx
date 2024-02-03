@@ -4,22 +4,22 @@ function Comments() {
   /// get blog id
   const { blog_id } = useParams();
   /// style
-  let style= {
+  let style = {
     inputs:
-      "border-2 border-zinc-200 rounded-md p-2 outline-0 w-full hover:border-green-500 focus:border-green-500 transtion duration-300",
+      "border-2 border-gray-200 rounded-md p-2 outline-0 w-full hover:border-green-500 focus:border-green-500 transtion duration-300",
   };
   /// variables
-  let [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState({
     username: "",
     email: "",
     body: "",
   });
   // msgs
-  let [msg, setMsg] = useState({
+  const [msg, setMsg] = useState({
     err: "",
     msg: "",
   });
-  let [fetching, setFetching] = useState(false);
+  const [fetching, setFetching] = useState(false);
   /// handle submit
   function submitComment(e) {
     e.preventDefault();
@@ -34,9 +34,6 @@ function Comments() {
         headers: {
           "content-type": "application/json",
           blog_id: blog_id,
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
         },
         body: JSON.stringify({
           username: formValues.username,
@@ -52,7 +49,6 @@ function Comments() {
             err: "",
             msg: data.message,
           });
-          setFetching(false);
           setFormValues({
             username: "",
             email: "",
@@ -72,12 +68,15 @@ function Comments() {
             setMsg({ msg: "", err: "" });
           }, 10000);
         }
+      })
+      .finally(() => {
+        setFetching(false);
       });
-    setFetching(false);
   }
   /// get all comments
-  let [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]);
   useEffect(() => {
+    setFetching(true);
     fetch(
       `${import.meta.env.VITE_domain}${import.meta.env.VITE_mainapi}${
         import.meta.env.VITE_all_blog_comments
@@ -86,9 +85,6 @@ function Comments() {
         method: "get",
         mode: "cors",
         headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
           blog_id: blog_id,
         },
       }
@@ -98,11 +94,14 @@ function Comments() {
         if (data.success) {
           setComments(data.data);
         }
+      })
+      .finally(() => {
+        setFetching(false);
       });
   }, []);
   /// rendering
   return (
-    <div className="w-full bg-zinc-50 text-green-700 p-2 mt-10">
+    <div className="w-full bg-gray-50 text-green-700 p-2 mt-10">
       <form
         onSubmit={submitComment}
         className="p-4 w-full rounded-lg h-fit flex flex-col gap-2"
@@ -157,9 +156,8 @@ function Comments() {
         <div>
           <input
             type="submit"
-            value={
-              fetching == false ? "add new comment" : "sending your comment..."
-            }
+            disabled={fetching}
+            value={!fetching ? "add new comment" : "sending your comment..."}
             className="border-2 border-green-500 bg-green-700 text-white p-2 hover:bg-green-500 transiton duration-300 rounded-lg"
           />
         </div>
@@ -173,9 +171,9 @@ function Comments() {
               return (
                 <div
                   key={i}
-                  className={i % 2 != 0 ? "bg-zinc-50 p-2" : "bg-zinc-100 p-2"}
+                  className={i % 2 != 0 ? "bg-gray-50 p-2" : "bg-gray-100 p-2"}
                 >
-                  <p>username: {comment.user_name}</p>
+                  <p>{comment.user_name}</p>
                   <p>{comment.body}</p>
                 </div>
               );

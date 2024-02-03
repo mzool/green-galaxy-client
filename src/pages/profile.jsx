@@ -16,6 +16,7 @@ const ProfilePage = () => {
   const [isFetching, setIsFetching] = useState(false);
   /// get user info
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!store.user._id) {
       setIsFetching(true);
       getUser()

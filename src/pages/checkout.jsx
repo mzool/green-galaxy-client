@@ -20,6 +20,7 @@ function Checkout() {
   const [done, setDone] = useState(false);
   // get cart items from server
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (store.cart.items?.length > 0) {
       setIsFetching(false);
       return;

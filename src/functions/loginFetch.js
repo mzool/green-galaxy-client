@@ -7,8 +7,6 @@ async function login(values){
                 method: "post",
                 cors: "cors",
                 headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
                     "content-type": "application/json",
                 },
                 credentials: "include",

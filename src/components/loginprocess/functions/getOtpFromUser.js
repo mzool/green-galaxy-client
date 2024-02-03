@@ -7,8 +7,6 @@ async function getOTPFromUserHandler(otp, token) {
                 method: "POST",
                 mode: "cors",
                 headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
                     'content-type': "application/json"
                 },
                 body: JSON.stringify({ otp: otp }),

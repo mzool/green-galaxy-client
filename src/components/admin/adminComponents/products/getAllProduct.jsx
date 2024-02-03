@@ -22,11 +22,6 @@ function GetAllProduct() {
     try {
       const response = await fetch(url, {
         method: "GET",
-        headers: {
-          Authorization: `GreenBearer ${
-            import.meta.env.VITE_authorization_token
-          }`,
-        },
         credentials:"include"
       });
 

@@ -8,8 +8,6 @@ async function checkOTP(otp) {
                 mode: "cors",
                 credentials: "include",
                 headers: {
-                    Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                        }`,
                     "content-type": "application/json",
                 },
                 body: JSON.stringify({ otp }),

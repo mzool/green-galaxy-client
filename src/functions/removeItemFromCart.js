@@ -8,8 +8,6 @@ function removeItem(itemId, cartId, msg, fun, store) {
             mode: "cors",
             headers: {
                 "content-type": "application/json",
-                Authorization: `GreenBearer ${import.meta.env.VITE_authorization_token
-                    }`,
             },
             body: JSON.stringify({
                 cart_id: cartId,
