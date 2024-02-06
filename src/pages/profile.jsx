@@ -7,7 +7,11 @@ import Shield from "../assets/shield";
 import List from "../assets/list";
 import ProfilePageContents from "../components/profile page components/ProfilePageContents";
 import getUser from "../functions/getUserInfo.js";
+import AuthAdmin from "../components/admin/authAdmin.jsx"
+import TagsForSEO from "../components/utilities/reactHelmet.jsx"
+
 const ProfilePage = () => {
+  const [a, auth] = useState(false);
   /// navigate
   const navigate = useNavigate();
   /// get the global store
@@ -43,9 +47,20 @@ const ProfilePage = () => {
 
 
   //// rendering
+  if(a){
+    return <AuthAdmin auth={auth}/>
+  }
   if (store.user._id) {
     return (
       <div className="bg-white h-fit flex flex-col gap-2 ">
+        <TagsForSEO
+          title={"Profile Page"}
+          pageURL={"https://green-galaxy.net/profile"}
+          descriptionOfThePage={
+            "profile page for user, you can controll your preferences, tracking orders and controlling your profile security from here."
+          }
+          urlToImageDescripeThePage={""}
+        />
         {/* side bar */}
         <div className="bg-gray-700 flex gap-2 flex-row flex-wrap h-fit w-full items-center justify-center p-2 text-white">
           {/* personal information with update functions*/}
@@ -76,12 +91,14 @@ const ProfilePage = () => {
           {/* go to admin */}
           {(store.user.permesions == "admin" ||
             store.user.permesions == "superAdmin") && (
-            <Link
-              to={"/auth/admin"}
+            <button
               className="bg-gray-700 text-white rounded-md p-2 hover:bg-gray-500 hover:cursor-pointer w-full text-center"
+              onClick={() => {
+                auth(true);
+              }}
             >
               Admin page
-            </Link>
+            </button>
           )}
         </div>
         {/* content */}

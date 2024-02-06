@@ -3,6 +3,7 @@ import LoadingSpinner from "../../assets/loading";
 import ProductCard from "./product_card";
 import theStore from "../../store/store";
 import Filter from "./filter";
+import TagsForSEO from "../utilities/reactHelmet"
 function AllProducts() {
   /// the store
   const { store } = useContext(theStore);
@@ -84,8 +85,19 @@ function AllProducts() {
   ///////// render products
   return (
     <div className="h-fit w-full bg-white flex flex-col items-center gap-4 p-4">
+      <TagsForSEO
+        title={"Shop All Products"}
+        pageURL={"https://green-galaxy.net/all-products"}
+        descriptionOfThePage={
+          "Shop all our high quality items with low prices in this page, filter for what product you want, there are a many items with low prices and a lot of categories"
+        }
+        urlToImageDescripeThePage={""}
+      />
       {/* filter component ***************************************************************************************/}
-      <Filter getFilteredProduct={setFilteredProduct} productsData={store.products} />
+      <Filter
+        getFilteredProduct={setFilteredProduct}
+        productsData={store.products}
+      />
       {/* all products  ********************************************************************************************************8*/}
       <div className="flex sm:flex-row sm:flex-wrap flex-col p-2 gap-10 bg-gray-100 w-full h-fit justify-center items-center">
         {store.products.map((product) => {

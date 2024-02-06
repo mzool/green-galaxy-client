@@ -2,8 +2,10 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../assets/loading";
 import Comments from "./comments/comments";
+import TagsForSEO from "../utilities/reactHelmet";
+
 function GetBlog() {
-  const {blog_id} = useParams();
+  const { blog_id } = useParams();
   /// blog information
   let [blog, setBlog] = useState({
     title: "",
@@ -53,6 +55,12 @@ function GetBlog() {
   }
   return (
     <div className="h-fit min-h-screen w-full px-4 bg-white w-full flex flex-col gap-4  text-gray-700 text-start">
+      <TagsForSEO
+        title={blog.title}
+        pageURL={`https://green-galaxy.net/blogs/${blog_id}`}
+        descriptionOfThePage={`${blog.title}`}
+        urlToImageDescripeThePage={blog.imageURL}
+      />
       {/* image */}
       <div className="w-full h-96 p-4">
         <img
@@ -67,16 +75,16 @@ function GetBlog() {
       </div>
       {/* body */}
       <div className="sm:w-5/6 flex items-start flex-col sm:p-10">
-        {blog.body.split(".").map((p, ind)=>{
+        {blog.body.split(".").map((p, ind) => {
           return (
             <div key={ind}>
-              <p>{p +"."}</p>
+              <p>{p + "."}</p>
             </div>
           );
         })}
       </div>
       {/* comments */}
-      <Comments/>
+      <Comments />
     </div>
   );
 }

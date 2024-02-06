@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import colors from "../templates/colors.json";
 import { useState, useRef } from "react";
 import { subscribeSchema } from "../validation/schemas";
 
@@ -51,7 +50,7 @@ const Footer = () => {
 
   return (
     <footer
-      className={`bg-${colors.navbarColor} text-${colors.navbarLinksColor}`}
+      className="bg-green-600 text-white"
     >
       <div className="container mx-auto p-6 ">
         <div className="flex flex-col wrap sm:row sm:flex-row  ">
@@ -67,6 +66,7 @@ const Footer = () => {
               <li>
                 <Link to="/refund-policy">refund policy</Link>
               </li>
+              <li><Link to={"/privacy-policy"}>privacy policy</Link></li>
             </ul>
           </div>
 
@@ -125,7 +125,7 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className={`mt-2 w-full bg-teal-800 hover:bg-${colors.buttonHoverColor} text-whtie py-2 rounded-md transition duration-300`}
+                className="mt-2 w-full bg-teal-800 hover:bg-teal-600 text-white py-2 rounded-md transition duration-300"
               >
                 Subscribe
               </button>

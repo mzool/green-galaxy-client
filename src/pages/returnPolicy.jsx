@@ -1,7 +1,17 @@
+import TagsForSEO from "../components/utilities/reactHelmet"
+
 
 const ReturnRefundPolicy = () => {
   return (
     <div className="max-w-3xl mx-auto p-8 bg-white text-gray-700 rounded-md mt-8">
+      <TagsForSEO
+        title={"Refund Policy"}
+        pageURL={"https://green-galaxy.net/refund-policy"}
+        descriptionOfThePage={
+          "Learn about our refund policy: hassle-free returns within [number of days] days of purchase. Read our terms and conditions for detailed information on eligibility and process. Your satisfaction is our priority."
+        }
+        urlToImageDescripeThePage={""}
+      />
       <h1 className="text-3xl font-bold mb-6">Return and Refund Policy</h1>
 
       <p className="mb-4">Effective Date: January / 2024</p>

@@ -3,6 +3,8 @@ import trackOrder from "../functions/trackOrder.js";
 import OrderInfo from "../components/trackorder/showOrder.jsx";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import TagsForSEO from "../components/utilities/reactHelmet.jsx"
+
 function TrackOrder() {
   const [search, setSearch] = useSearchParams();
   //// order number variable
@@ -45,6 +47,14 @@ function TrackOrder() {
   }
   return (
     <div className="w-full p-10 h-screen bg-white flex items-start justify-center text-gray-700">
+      <TagsForSEO
+        title={"Rigester Page"}
+        pageURL={"https://green-galaxy.net/track-order"}
+        descriptionOfThePage={
+          "Track your order and know it is status from this page, ensert your email and order number to search for your order information"
+        }
+        urlToImageDescripeThePage={""}
+      />
       {/* form that take order number and search for it  */}
       <form
         onSubmit={startTracking}

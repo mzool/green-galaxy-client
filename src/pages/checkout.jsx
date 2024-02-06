@@ -4,7 +4,7 @@ import CheckoutForm from "../components/checkout/checkoutForm";
 import theStore from "../store/store.js";
 import getDiscount from "../functions/discountCode.js";
 import GetCart from "../functions/getCart.js";
-
+import TagsForSEO from "../components/utilities/reactHelmet.jsx"
 function Checkout() {
   //// store
   const { store } = useContext(theStore);

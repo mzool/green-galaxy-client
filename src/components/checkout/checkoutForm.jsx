@@ -35,7 +35,6 @@ function CheckoutForm({ cart }) {
         payment_method: "cash",
         cartId: cart.cartId,
       };
-      console.log(data);
       placeOrder(data)
         .then((res) => res.json())
         .then((data) => {
@@ -198,6 +197,8 @@ function CheckoutForm({ cart }) {
             ) : null}
           </div>
         </div>
+        <hr className="m-2" />
+        <div className="font-semibold ">payment method: cash on delivery</div>
         <hr className="m-2" />
         <input
           type="submit"
