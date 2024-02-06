@@ -27,6 +27,14 @@ function CartPage() {
   if (items?.length == 0 || !items) {
     return (
       <div className="min-h-screen h-fit bg-white flex items-center justify-center flex-col gap-4 text-green-600">
+        <TagsForSEO
+          title={"cart page"}
+          pageURL={"https://green-galaxy.net/cart"}
+          descriptionOfThePage={
+            "all beautifull items in that you added to your cart"
+          }
+          urlToImageDescripeThePage={""}
+        />
         <div className="bg-zinc-100 p-2 rounded-lg flex flex-row flex-wrap gap-2">
           <h2>no items in your cart </h2>
           <div>
