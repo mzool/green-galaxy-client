@@ -50,7 +50,7 @@ function Blog() {
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full p-6">
       <TagsForSEO
-        title={"Green Galaxy Blog"}
+        title={"Green Galaxy Blogs"}
         pageURL={"https://green-galaxy.net/blog"}
         descriptionOfThePage={
           "discover our fantastic stories and read our blogs about fashion, sustainability and other many fantastic things"
