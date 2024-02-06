@@ -14,6 +14,8 @@ import Rating from "./productPageComponents/rating.jsx";
 import MadeWhenOrder from "./productPageComponents/madeWhenOrder.jsx";
 import Quantity from "./productPageComponents/quantity.jsx";
 import addToCart from "../../functions/addToCart.js";
+import TagsForSEO from "../utilities/reactHelmet.jsx";
+
 function Product() {
   /// navigate
   const navigate = useNavigate();
@@ -75,6 +77,12 @@ function Product() {
   if (product.productName)
     return (
       <div className="flex flex-col gap-6 p-4">
+        <TagsForSEO
+          title={product.productName}
+          pageURL={`https://green-galaxy.net/products/${product.productId}`}
+          descriptionOfThePage={`${product.productDescription}`}
+          urlToImageDescripeThePage={product.productImgs[0]}
+        />
         <div className="sm:grid sm:grid-cols-2 flex flex-col gap-6 p-4">
           {/********************************** images at left half**********************************/}
           <ProductImages
@@ -166,7 +174,10 @@ function Product() {
         {/*********************************** reviwes  ***********************************/}
         {/* <Reviews /> */}
         {/*********************************** users also purchase  ***********************************/}
-        <SameProcuts category={product.productCategory}/>
+        <SameProcuts
+          category={product.productCategory}
+          id={product.productId}
+        />
       </div>
     );
 }

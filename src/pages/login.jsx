@@ -8,6 +8,7 @@ import getUser from "../functions/getUserInfo.js";
 import login from "../functions/loginFetch.js";
 import { Link } from "react-router-dom";
 import forgetPasswordHandler from "../functions/forgetPassword.js";
+import TagsForSEO from "../components/utilities/reactHelmet.jsx";
 
 const LoginPage = () => {
   /// forget password
@@ -80,6 +81,14 @@ const LoginPage = () => {
   if (!store.user._id && !isFetching) {
     return (
       <div className="min-h-screen flex p-4 justify-center h-full w-full bg-white p-10">
+        <TagsForSEO
+          title={"Login Page"}
+          pageURL={"https://green-galaxy.net/login"}
+          descriptionOfThePage={
+            "login to your profile"
+          }
+          urlToImageDescripeThePage={""}
+        />
         <div className="w-full sm:w-4/6 md:w-3/6 h-fit p-10 space-y-4 rounded-md border bg-white border-gray-300 shadow-md shadow-gray-400">
           <form onSubmit={formik.handleSubmit}>
             <div className="space-y-4 flex flex-col justify-center">
@@ -149,6 +158,12 @@ const LoginPage = () => {
               ref={forgetPassDialog}
               className="w-fit h-fit p-4 rounded-md backdrop:bg-black backdrop:bg-opacity-50"
             >
+              <button
+                className="bg-red-500 text-white text-xs rounded-md w-full p-1"
+                onClick={() => forgetPassDialog.current.close()}
+              >
+                close
+              </button>
               <form
                 className="flex flex-col gap-4 text-gray-700 p-4"
                 onSubmit={(e) => {

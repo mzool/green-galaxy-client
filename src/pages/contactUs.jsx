@@ -1,6 +1,6 @@
 import { useState } from "react";
-import colors from "../templates/colors.json";
 import contactUsSchema from "../validation/contactus_schema.js";
+import TagsForSEO from "../components/utilities/reactHelmet.jsx"
 function Contact() {
   let [formData, setFormData] = useState({
     name: "",
@@ -83,10 +83,10 @@ function Contact() {
   /// style
   let style = {
     parent: "flex flex-col h-fit w-full p-5",
-    form: `flex flex-col h-fit place-self-center bg-${colors.mainBackgroundColor} text-${colors.mainTextColor} m-2 flex flex-col gap-5 p-5 w-fll md:w-3/6 h-full rounded border-2 border-zinc-200 shadow-lg shadow-green-600`,
+    form: "flex flex-col h-fit place-self-center bg-white text-gray-700 m-2 flex flex-col gap-5 p-5 w-fll md:w-3/6 h-full rounded border-2 border-zinc-200 shadow-lg shadow-green-600",
     label: "block text-lg font-medium leading-6 text-gray-900",
     input:
-      "block w-full py-1.5 pl-7 pr-20 text-gray-900 border-b-2 border-gray-500 text-green-600 focus:border-green-600 outline-0 sm:text-sm sm:leading-6",
+      "block w-full py-1.5 pl-7 pr-20 text-gray-700 border-b-2 border-gray-500 focus:border-green-600 outline-0 sm:text-sm sm:leading-6",
     textarea:
       "overflow-x-hidden whitespace-pre-wrap resize-none w-full h-full rounded-md border-2 border-gray-500 focus:border-green-600 outline-0 p-3 text-gray-900 sm:text-sm sm:leading-6",
     btn: "bg-green-600 rounded text-white text-xl p-2 hover:bg-green-500 w-full transition ease-in-out duration-300",
@@ -95,6 +95,14 @@ function Contact() {
 
   return (
     <div className={style.parent}>
+      <TagsForSEO
+        title={"contact us"}
+        pageURL={"https://green-galaxy.net/contact-us"}
+        descriptionOfThePage={
+          "if you have any question or issue, contact us and send your concern to our email by filling the form"
+        }
+        urlToImageDescripeThePage={""}
+      />
       {/* form */}
       <form className={style.form} onSubmit={handleSubmit}>
         {/* contact us header */}

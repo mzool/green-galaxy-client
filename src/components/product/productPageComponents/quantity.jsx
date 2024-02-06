@@ -25,8 +25,6 @@ function Quantity({ selection }) {
       <input
         type="number"
         className="p-2 rounded-lg border-2 border-gray-700 text-black text-center w-full"
-        min={1}
-        max={100}
         value={quantity}
         onChange={(e) => handleQuantity(e)}
       />

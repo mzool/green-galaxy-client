@@ -6,6 +6,8 @@ import LoadingSpinner from "../assets/loading";
 import theStore from "../store/store.js";
 import getUser from "../functions/getUserInfo.js";
 import register from "../functions/registerFetch.js";
+import TagsForSEO from "../components/utilities/reactHelmet.jsx"
+
 const RegisterPage = () => {
   /// store
   let { store } = useContext(theStore);
@@ -58,6 +60,14 @@ const RegisterPage = () => {
   }
   return (
     <div className="w-full p-4 h-fit bg-white flex items-center justify-center text-gray-700">
+      <TagsForSEO
+        title={"Rigester Page"}
+        pageURL={"https://green-galaxy.net/register"}
+        descriptionOfThePage={
+          "Join Green Galaxy community from here, create new account and have mor flexible controlles to your preferences."
+        }
+        urlToImageDescripeThePage={""}
+      />
       <div className="bg-white p-8 rounded-md w-full sm:w-4/6 lg:w-3/6 border-1 border-gray-200 shadow-gray-500 shadow-md">
         <h1 className="text-2xl font-bold mb-6 text-green-600">
           Start your journey with Green Galaxy
@@ -150,7 +160,10 @@ const RegisterPage = () => {
               </div>
               <div className="mt-2 flex flex-col bg-white">
                 <p>Have an account? </p>
-                <Link to={"/login"} className="text-green-600 hover:text-green-800 transtion duration-300">
+                <Link
+                  to={"/login"}
+                  className="text-green-600 hover:text-green-800 transtion duration-300"
+                >
                   Go to Login page
                 </Link>
               </div>

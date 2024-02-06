@@ -1,6 +1,16 @@
+import TagsForSEO from "../components/utilities/reactHelmet";
+
 function AboutUs() {
   return (
     <div className="flex flex-col gap-2 mt-5 mb-5 p-5 text-md text-gray-700 items-center justify-center w-full h-full bg-white">
+      <TagsForSEO
+        title={"about us"}
+        pageURL={"https://green-galaxy.net/about-us"}
+        descriptionOfThePage={
+          "about us page, tell you the story about Green Galaxy online store"
+        }
+        urlToImageDescripeThePage={""}
+      />
       <div className="md:w-4/6 lg:w-3/6 sm:w-4/6 w-full">
         <div className="title text-4xl">
           <h1 className="sm:text-4xl font-bold mb-5">About Green Galaxy</h1>

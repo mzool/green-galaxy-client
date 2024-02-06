@@ -1,57 +1,90 @@
 import { useState } from "react";
 import MainSales from "./sales/mainSales";
+import DashboardSideBar from "./dashboardSideBar";
+import OrdersChart from "./orders/ordersChart";
+import { useQuery } from "@apollo/client";
+import gql from "graphql-tag";
+import MainUsers from "./users/mainUsers";
+import MainCart from "./cartAnalysis/mainCart";
+/// query
+const GET_DATA = gql`
+  query {
+    getOrders {
+      items {
+        discount
+        product {
+          productName
+          productId
+          productCategory
+          productPrice
+          productBrand
+        }
+        color
+        size
+        otherVarient
+        quantity
+      }
+      city
+      email
+      order_id
+      order_status
+    }
+    getCarts {
+      user {
+        username
+        email
+        phone
+      }
+      items {
+        size
+        otherVarients
+        color
+        quantity
+        product {
+          productName
+          productId
+          productCategory
+          productPrice
+          productBrand
+          productDiscount
+        }
+      }
+      createdAt
+      cart_id
+    }
+  }
+`;
+
 function MainDashboard() {
+  /// get data
+  const { loading, error, data } = useQuery(GET_DATA);
   /// to render
   const [element, setElement] = useState("sales");
   /// rendering
   return (
     <div className="grid grid-cols-8 w-full h-fit min-h-screen pt-2">
       {/* sidebar */}
-      <div className="bg-gray-700 text-white w-fit p-4 flex flex-col gap-4 col-span-1">
-        <div>
-          <button
-            className="px-4 py-2 bg-white text-gray-700 hover:bg-gray-200 w-full rounded"
-            onClick={() => setElement("sales")}
-          >
-            Sales
-          </button>
-        </div>
-        <div>
-          <button
-            className="px-4 py-2 bg-white text-gray-700 hover:bg-gray-200 w-full rounded"
-            onClick={() => setElement("inventory")}
-          >
-            Inventory
-          </button>
-        </div>
-        <div>
-          <button
-            className="px-4 py-2 bg-white text-gray-700 hover:bg-gray-200 w-full rounded"
-            onClick={() => setElement("customers")}
-          >
-            Customers
-          </button>
-        </div>
-        <div>
-          <button
-            className="px-4 py-2 bg-white text-gray-700 hover:bg-gray-200 w-full rounded"
-            onClick={() => setElement("finacial")}
-          >
-            Financial
-          </button>
-        </div>
-        <div>
-          <button
-            className="px-4 py-2 bg-white text-gray-700 hover:bg-gray-200 w-full rounded"
-            onClick={() => setElement("traffic")}
-          >
-            Traffic
-          </button>
-        </div>
-      </div>
+      <DashboardSideBar setElement={setElement} />
       {/* main page */}
       <div className=" p-2 bg-white col-span-7 ">
-        {element == "sales" && <MainSales/>}
+        {element == "sales" && (
+          <MainSales data={data} error={error} loading={loading} />
+        )}
+        {element == "orders" && (
+          <OrdersChart data={data.getOrders} error={error} loading={loading} />
+        )}
+        {element == "users" && (
+          <MainUsers
+            data={data.getOrders.map((d) => {
+              return d.email;
+            })}
+            error={error}
+            loading={loading}
+          />
+        )}
+        {element == "carts" && (
+          <MainCart data={data.getCarts} error={error} loading={loading} />
+        )}
       </div>
     </div>
   );

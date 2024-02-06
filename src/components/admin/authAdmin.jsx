@@ -5,7 +5,7 @@ import sendOTP from "../../functions/sendOTP.js";
 import OTPForm from "./adminComponents/authAdminComponents/OTPForm.jsx";
 import { useNavigate } from "react-router-dom";
 import checkAdminCookie from "../../functions/checkAdminCookie.js";
-function AuthAdmin() {
+function AuthAdmin({auth}) {
   /// rule
   const [rule, setRule] = useState("");
   //// navigate
@@ -70,7 +70,7 @@ function AuthAdmin() {
     return <OTPForm admin={setAdmin} form={setForm} setRule={setRule}/>;
   }
   if (adminPage) {
-    return <Admin rule={rule} />;
+    return <Admin rule={rule} auth={auth}/>;
   }
   if (isFetching) {
     /// is fetching

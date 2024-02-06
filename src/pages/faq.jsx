@@ -1,7 +1,16 @@
+import TagsForSEO from "../components/utilities/reactHelmet";
 
 const FAQ = () => {
   return (
     <div className="max-w-3xl mx-auto p-8 bg-white rounded-md text-gray-700">
+      <TagsForSEO
+        title={"FAQ'S page"}
+        pageURL={"https://green-galaxy.net/faqs"}
+        descriptionOfThePage={
+          "In this page, you can find all FAQ's(frequently asked questions) that customers keep asking, and if you do not find the answer for your question go to contact us page and ask us"
+        }
+        urlToImageDescripeThePage={""}
+      />
       <h1 className="text-3xl font-bold mb-6">Frequently Asked Questions</h1>
 
       <div className="mb-4">
@@ -45,13 +54,15 @@ const FAQ = () => {
           Q4: Can I modify or cancel my order after placing it?
         </h2>
         <p>
-          Once an order is placed, modifications may not be
-          possible automatically. However, if your order is still in a "Pending"
-          status, you can cancel it by visiting your profile,
-          navigating to the "Orders" section, and selecting the cancel option if
-          available.
+          Once an order is placed, modifications may not be possible
+          automatically. However, if your order is still in a "Pending" status,
+          you can cancel it by visiting your profile, navigating to the "Orders"
+          section, and selecting the cancel option if available.
         </p>
-        <p>You can change varient, add item or change quantity by contacting us as fast as possible.</p>
+        <p>
+          You can change varient, add item or change quantity by contacting us
+          as fast as possible.
+        </p>
       </div>
 
       <div className="mb-4">

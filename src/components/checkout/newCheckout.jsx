@@ -52,7 +52,7 @@ function NCheckout() {
         <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
           <OrderItems cart={store?.cart} />
           {/* payment section */}
-          <CheckoutForm cart={store?.cart} />
+          <CheckoutForm cart={store?.cart}/>
         </div>
       </div>
     );

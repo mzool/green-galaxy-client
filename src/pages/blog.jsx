@@ -2,6 +2,7 @@ import { useEffect, useContext } from "react";
 import LoadingSpinner from "../assets/loading";
 import { Link, useSearchParams } from "react-router-dom";
 import theStore from "../store/store.js";
+import TagsForSEO from "../components/utilities/reactHelmet.jsx"
 function Blog() {
   /// store
   const { store } = useContext(theStore);
@@ -48,6 +49,14 @@ function Blog() {
   }
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full p-6">
+      <TagsForSEO
+        title={"Green Galaxy Blog"}
+        pageURL={"https://green-galaxy.net/blog"}
+        descriptionOfThePage={
+          "discover our fantastic stories and read our blogs about fashion, sustainability and other many fantastic things"
+        }
+        urlToImageDescripeThePage={""}
+      />
       {/* header */}
       <div className="text-2xl bg p-4 sm:w-3/6 flex flex-wrap text-center text-gray-600 shadow-2xl rounded-lg">
         <h1>

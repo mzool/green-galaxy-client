@@ -25,14 +25,9 @@ import CartPage from "./pages/cartPage";
 /// ads
 import Ads from "./components/ads line/ads";
 import ads from "./templates/ads.json";
-/////////
-//// admin
-import AuthAdmin from "./components/admin/authAdmin";
 //// blog
 import Blog from "./pages/blog";
 import GetBlog from "./components/blog/getBlog";
-/// checkout
-import Checkout from "./pages/checkout";
 //// track order
 import TrackOrder from "./pages/trackOrder";
 /// search result
@@ -40,9 +35,10 @@ import SearchResult from "./components/search/searchResult";
 import Sales from "./pages/sales";
 /// faq page
 import FAQ from "./pages/faq";
-/// refund policy
+/// refund policy and privacy policy
 import ReturnRefundPolicy from "./pages/returnPolicy";
 import NCheckout from "./components/checkout/newCheckout";
+import PrivacyPolicy from "./pages/privacyPolicy";
 //////////////////////
 function App() {
   /// context api for global store
@@ -110,7 +106,6 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<Contact />} />
-          <Route path="/auth/admin" element={<AuthAdmin />} />
           <Route path="/products/:productUrl" element={<Product />} />
           <Route path="/all-products" element={<AllProducts />} />
           <Route path="/cart" element={<CartPage />} />
@@ -123,6 +118,7 @@ function App() {
           <Route path="/login/otp-form" element={<OtpForm />} />
           <Route path="/faqs" element={<FAQ />} />
           <Route path="/refund-policy" element={<ReturnRefundPolicy />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
         <Footer />
       </BrowserRouter>

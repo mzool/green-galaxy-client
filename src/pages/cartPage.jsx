@@ -4,6 +4,7 @@ import LoadingSpinner from "../assets/loading";
 import theStore from "../store/store.js";
 import GetCart from "../functions/getCart.js";
 import removeItem from "../functions/removeItemFromCart.js";
+import TagsForSEO from "../components/utilities/reactHelmet.jsx"
 function CartPage() {
   /// get the store
   const { store } = useContext(theStore);
@@ -72,6 +73,14 @@ function CartPage() {
   else
     return (
       <div className="h-fit min-h-screen w-full px-10 py-4 flex flex-col gap-4 items-center justify-start">
+        <TagsForSEO
+          title={"cart page"}
+          pageURL={"https://green-galaxy.net/cart"}
+          descriptionOfThePage={
+            "all beautifull items in that you added to your cart"
+          }
+          urlToImageDescripeThePage={""}
+        />
         {/* message */}
         {msg && (
           <div className="w-full p-2 bg-gradient-to-r from-green-400 to-green-600 rounded-md text-white flex flex-col items-center justify-center">

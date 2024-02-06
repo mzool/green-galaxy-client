@@ -32,7 +32,7 @@ function EnableTowStepsLogin({ store }) {
   //// rendering
   return (
     <div className="w-full flex flex-col gap-6 h-fit bg-gray-200 text-gray-700 p-4 rounded-md">
-      <h2 className="text-center font-bold">Enable tow steps login</h2>
+      <h2 className="text-center font-bold">Tow steps login</h2>
       <p className="text-sm">
         when you try to login again to your profile, an email with one time
         password will sent to you
