@@ -38,6 +38,7 @@ function GetBlog() {
         })
         .then((data) => {
           if (data) {
+            console.log(data);
             setBlog({
               title: data.data.title,
               body: data.data.body,
@@ -54,7 +55,7 @@ function GetBlog() {
     return <LoadingSpinner color={"green-500"} />;
   }
   return (
-    <div className="h-fit min-h-screen w-full px-4 bg-white w-full flex flex-col gap-4  text-gray-700 text-start">
+    <div className="h-fit min-h-screen w-full p-6 flex flex-col gap-4 bg-white text-gray-700 text-start">
       <TagsForSEO
         title={blog.title}
         pageURL={`https://green-galaxy.net/blogs/${blog_id}`}
@@ -62,19 +63,19 @@ function GetBlog() {
         urlToImageDescripeThePage={blog.imageURL}
       />
       {/* image */}
-      <div className="w-full h-96 p-4">
+      <div className="md:w-3/6 sm:w-4/6 w-full place-self-center">
         <img
           src={blog.imageURL}
           alt={blog.title}
-          className="w-full h-full rounded-lg"
+          className="object-cover rounded-md"
         />
       </div>
       {/* title */}
-      <div className="sm:px-10 w-full">
+      <div className="md:w-3/6 sm:w-4/6 w-full place-self-center">
         <h1 className="text-2xl w-full font-bold">{blog.title}</h1>
       </div>
       {/* body */}
-      <div className="sm:w-5/6 flex items-start flex-col sm:p-10">
+      <div className="md:w-3/6 sm:w-4/6 w-full place-self-center flex flex-col">
         {blog.body.split(".").map((p, ind) => {
           return (
             <div key={ind}>

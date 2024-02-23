@@ -90,7 +90,6 @@ function AboutUs() {
             a memorable experience.
           </p>
           <strong> Happy shopping!</strong>
-          <strong> Mohammad Basem</strong>
         </div>
       </div>
     </div>

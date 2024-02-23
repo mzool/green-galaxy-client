@@ -7,6 +7,7 @@ import { useState } from "react";
 function CheckoutForm({ cart }) {
   const [thanks, setThanks] = useState({ orderNumber: "" });
   const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState("");
   // Initialize Formik
   const formik = useFormik({
     initialValues: {
@@ -40,6 +41,8 @@ function CheckoutForm({ cart }) {
         .then((data) => {
           if (data.success) {
             setThanks({ orderNumber: data.orderNumber });
+          } else {
+            setError(data.message);
           }
         })
         .finally(() => {
@@ -59,7 +62,9 @@ function CheckoutForm({ cart }) {
   };
   //////////// rendering
   if (thanks.orderNumber) {
-    return <ThankYou orderNumber={thanks.orderNumber} />;
+    return <ThankYou orderNumber={thanks.orderNumber} err={null} />;
+  } else if (error) {
+    return <ThankYou orderNumber={null} err={error} />;
   }
   return (
     <div className={style.parentDiv}>

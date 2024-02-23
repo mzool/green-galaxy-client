@@ -15,10 +15,7 @@ function Comments() {
     body: "",
   });
   // msgs
-  const [msg, setMsg] = useState({
-    err: "",
-    msg: "",
-  });
+  const [msg, setMsg] = useState("");
   const [fetching, setFetching] = useState(false);
   /// handle submit
   function submitComment(e) {
@@ -45,28 +42,22 @@ function Comments() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success == true) {
-          setMsg({
-            err: "",
-            msg: data.message,
-          });
+          setComments((pr) => [
+            ...pr,
+            { user_name: formValues.username, body: formValues.body },
+          ]);
           setFormValues({
             username: "",
             email: "",
             body: "",
           });
-          setTimeout(() => {
-            setMsg({ msg: "", err: "" });
-          }, 10000);
         } else {
-          setMsg({ err: data.error || data.errors[0].split(":")[0], msg: "" });
+          setMsg(data.message);
           setFormValues({
             username: "",
             email: "",
             body: "",
           });
-          setTimeout(() => {
-            setMsg({ msg: "", err: "" });
-          }, 10000);
         }
       })
       .finally(() => {
@@ -98,10 +89,10 @@ function Comments() {
       .finally(() => {
         setFetching(false);
       });
-  }, []);
+  }, [blog_id]);
   /// rendering
   return (
-    <div className="w-full bg-gray-50 text-green-700 p-2 mt-10">
+    <div className="w-full bg-gray-50 text-gray-700 p-2 mt-10">
       <form
         onSubmit={submitComment}
         className="p-4 w-full rounded-lg h-fit flex flex-col gap-2"
@@ -149,8 +140,7 @@ function Comments() {
         </div>
         {/* msgs */}
         <div className="w-full">
-          {msg.err && <p className="text-red-500"> {msg.err}</p>}
-          {msg.msg && <p className="text-green-500"> {msg.msg}</p>}
+          {msg && <p className="text-gray-700"> {msg}</p>}
         </div>
         {/* submit */}
         <div>
@@ -164,16 +154,16 @@ function Comments() {
       </form>
       {/* past comments */}
       <div className="mt-2 flex flex-col w-full p-4 ">
-        <h2>All comments:</h2>
+        <h2 className="font-semibold mb-2">All comments:</h2>
         {comments.length == 0
           ? "no comments"
           : comments.map((comment, i) => {
               return (
                 <div
                   key={i}
-                  className={i % 2 != 0 ? "bg-gray-50 p-2" : "bg-gray-100 p-2"}
+                  className={i % 2 != 0 ? "bg-gray-50 p-2" : "bg-green-600 text-white p-2"}
                 >
-                  <p>{comment.user_name}</p>
+                  <p className="text-sm font-semibold mb-1">@{comment.user_name}</p>
                   <p>{comment.body}</p>
                 </div>
               );

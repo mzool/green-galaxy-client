@@ -1,7 +1,7 @@
-import { FaCheckCircle } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
 import { useRef, useEffect } from "react";
-
-const ThankYou = ({ orderNumber }) => {
+import { FaCheckCircle } from "react-icons/fa"
+const ThankYou = ({ orderNumber, err }) => {
   const thanksDialog = useRef(null);
 
   useEffect(() => {
@@ -23,7 +23,25 @@ const ThankYou = ({ orderNumber }) => {
     // Change the window location when the dialog is closed
     window.location.href = "/";
   };
-
+  if (err) {
+    return (
+      <dialog ref={thanksDialog} className="p-2 rounded-md ">
+        <div className="container mx-auto mt-8 text-center flex flex-col gap-2 p-4">
+          <RxCross2 className="text-red-600 text-5xl mb-4" />
+          <p className="text-red-600 mb-6">{err}</p>
+        </div>
+        <button
+          className="bg-teal-500 text-white p-2 rounded-md text-md w-full"
+          onClick={() => {
+            // Close the dialog when the button is clicked
+            thanksDialog.current.close();
+          }}
+        >
+          home page
+        </button>
+      </dialog>
+    );
+  }
   // Rendering
   return (
     <dialog ref={thanksDialog} className="p-2 rounded-md ">
