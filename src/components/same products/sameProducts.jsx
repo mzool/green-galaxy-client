@@ -21,7 +21,7 @@ function SameProcuts({ category, id }) {
         <p className="font-semibold text-gray-700 text-lg">
           People also Purchased:
         </p>
-        <div className="w-full flex flex-row gap-4 rounded-md items-center justify-center">
+        <div className="w-full flex flex-row flex-wrap gap-4 rounded-md items-center justify-center">
           {sameProducts.map((pr) => (
             <ProductCard
               key={pr.productId}

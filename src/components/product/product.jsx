@@ -57,6 +57,13 @@ function Product() {
       setAddingToCart(false);
       return setMessage("please choose all available options");
     }
+    if (
+      userSelections.quantity <= 0 ||
+      !userSelections.quantity ||
+      userSelections.quantity.length == 0
+    ) {
+      setSelections((pr) => ({ ...pr, quantity: 1 }));
+    }
     setMessage("");
     /////// fetch to server
     addToCart(userSelections)
@@ -92,7 +99,7 @@ function Product() {
           {/********************************** information at right half **********************************/}
           <div>
             {/********************************** first product name **********************************/}
-            <div className="p-2  font-bold text-gray-700 text-2xl flex flex-row gap-6">
+            <div className="p-2 font-bold text-gray-700 text-2xl flex flex-col sm:flex-row sm:gap-4 text-center">
               <h2>{product.productName}</h2>
               {product.productDiscount > 0 ? (
                 <div className="flex flex-row gap-2">
@@ -118,7 +125,7 @@ function Product() {
             {/*********************************** made to order  ***********************************/}
             {product.isMadeToOrder && <MadeWhenOrder />}
             {/********************************** product rating **********************************/}
-            <Rating />
+            {/* <Rating /> */}
             {/********************************** product colors **********************************/}
             {product.colors?.length > 0 && (
               <div className="p-2 flex flex-col gap-2">
@@ -151,7 +158,9 @@ function Product() {
               </div>
             )}
             {/*********************************** Quantity ***********************************/}
-            <Quantity selection={setSelections} />
+            <div className="w-full flex items-center justify-center p-2">
+              <Quantity selection={setSelections} />
+            </div>
             {/*********************************** wrong message  ***********************************/}
             {message && (
               <div className="w-full text-red-500 p-2 ">{message}</div>
@@ -159,12 +168,26 @@ function Product() {
             {/*********************************** add to cart  ***********************************/}
             <div className="w-full py-2 px-4">
               <button
+                disabled={
+                  product.productStock > 0 &&
+                  product.productStock >= userSelections.quantity
+                    ? false
+                    : true
+                }
                 onClick={handleAddToCart}
-                className="w-full bg-teal-600 text-white rounded-lg p-2 text-lg mt-6 hover:bg-teal-800 transition ease-in-out duration-300"
+                className={`w-full ${
+                  product.productStock > 0 &&
+                  product.productStock >= userSelections.quantity
+                    ? "bg-teal-600 text-white  hover:bg-teal-800 transition ease-in-out duration-300"
+                    : "bg-gray-200 text-red-500"
+                } rounded-md p-2 text-md mt-6`}
               >
-                {addingToCart
-                  ? "adding the item to your cart..."
-                  : "add to cart"}
+                {product.productStock > 0 &&
+                product.productStock >= userSelections.quantity
+                  ? addingToCart
+                    ? "adding the item to your cart..."
+                    : "add to cart"
+                  : "out of stock"}
               </button>
             </div>
             {/*********************************** payment options  ***********************************/}

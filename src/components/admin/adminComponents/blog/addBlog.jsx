@@ -11,18 +11,15 @@ function AddBlog() {
     err: "",
     msg: "",
   });
-  let [fetching, setFetching] = useState(false)
+  let [fetching, setFetching] = useState(false);
   /// submit
   function addBlog(e) {
     e.preventDefault();
     setFetching(true);
     /// check if no image
-    if (!image) {
-      return setMsg({ err: "cover image is required" });
-    } else if (!blog.title) {
-      return setMsg({ err: "title required" });
-    } else if (!blog.body) {
-      return setMsg({ err: "blog body is required" });
+    if (!image || !blog.title || !blog.body) {
+      setFetching(false);
+      return setMsg({ err: "fill all fields" });
     }
     let form_data = new FormData();
     form_data.append("images", image);
@@ -33,7 +30,7 @@ function AddBlog() {
         import.meta.env.VITE_add_blog
       }`,
       {
-        method: "post",
+        method: "POST",
         mode: "cors",
         credentials: "include",
         body: form_data,
@@ -47,16 +44,15 @@ function AddBlog() {
           return setMsg({ msg: data.message, err: "" });
         }
       });
-      setFetching(false)
-    setTimeout(() => {
-      window.location.reload("self");
-    }, 5000);
+    setFetching(false);
+    setBlog({});
+    setImage({});
   }
   return (
     <div className="w-full h-fit flex justify-center items-center">
       <form
         onSubmit={addBlog}
-        className="w-4/6 bg-zinc-50 border-2 border-zinc-400 shadow-green-500 shadow-md rounded-lg p-4 gap-4 flex flex-col justify-center items-center"
+        className="w-4/6 bg-gray-50 border-2 border-gray-400 rounded-md p-4 gap-4 flex flex-col justify-center items-center"
       >
         {/* title */}
         <div className="w-full">
@@ -65,7 +61,7 @@ function AddBlog() {
             onChange={(e) => setBlog({ ...blog, title: e.target.value })}
             type="text"
             placeholder="title"
-            className="w-full border-zinc-200 rounded p-2 border-2 hover:border-green-500 outline-0 focus:border-green-500"
+            className="w-full border-gray-200 rounded p-2 border-2 hover:border-green-500 outline-0 focus:border-green-500"
           />
         </div>
         <div>
@@ -79,7 +75,7 @@ function AddBlog() {
             onChange={(e) => setBlog({ ...blog, body: e.target.value })}
             maxLength={5000}
             placeholder="blog contents"
-            className="p-4 rounded border-zinc-200 border-2 hover:border-green-500 focus:border-green-500 outline-0 w-full h-fit"
+            className="p-4 rounded border-gray-200 border-2 hover:border-green-500 focus:border-green-500 outline-0 w-full h-fit"
           ></textarea>
         </div>
         {/* image */}
@@ -96,7 +92,7 @@ function AddBlog() {
         </div>
         {/* messages */}
         <div>
-          <div className="bg-zinc-50 p-4 rounded-md w-fit h-fit">
+          <div className="bg-gray-50 p-4 rounded-md w-fit h-fit">
             {msg.err && <p className="text-red-500">{msg.err}</p>}
             {msg.msg && <p className="text-green-500">{msg.msg}</p>}
           </div>
@@ -105,7 +101,8 @@ function AddBlog() {
             <input
               type="submit"
               className="p-2 bg-green-700 rounded text-white hover:bg-green-600"
-              value={fetching?"posting...":"add new blog"}
+              value={fetching ? "posting..." : "add new blog"}
+              disabled={fetching}
             />
           </div>
         </div>

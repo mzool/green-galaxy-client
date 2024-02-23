@@ -24,7 +24,7 @@ const ReturnRefundPolicy = () => {
 
       <h2 className="text-xl font-semibold mb-2">1. Returns</h2>
       <p className="mb-4">
-        We gladly accept returns within 30 days of the purchase date. To be
+        We gladly accept returns within 15 days of the purchase date. To be
         eligible for a return, your item must be unused, in the same condition
         that you received it, and in the original packaging. Any item not in its
         original condition, damaged, or missing parts for reasons not due to our
@@ -34,10 +34,11 @@ const ReturnRefundPolicy = () => {
       <h2 className="text-xl font-semibold mb-2">2. Initiating a Return</h2>
       <p className="mb-4">To initiate a return, please follow these steps:</p>
       <ul className="list-disc pl-6 mb-4">
-        <li>Login to your account on our website.</li>
-        <li>Go to the "Orders" section.</li>
-        <li>Select the order containing the item(s) you wish to return.</li>
-        <li>Follow the instructions to initiate the return process.</li>
+        <li>Go to Contact Us page</li>
+        <li>Fill the form with All order information and the reason for return</li>
+        <li>If order contains multible items, specify what you want to return</li>
+        <li>Send a pictures for the defects if there are, and the package(s)</li>
+        <li>Support Team will conatact you to contiue with return steps </li>
       </ul>
       <p>
         If you made a purchase as a guest, please contact our customer support

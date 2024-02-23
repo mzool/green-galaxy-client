@@ -1,5 +1,6 @@
 import { useState } from "react";
 import updateOrderVarient from "./ordersFunctions/updateOrderVarient.js";
+import CopyToClipboardSection from "./copyToClipBoard.jsx";
 function UpdateOrderVarient({ data }) {
   ///
   const [itemId, setItemId] = useState("");
@@ -23,7 +24,7 @@ function UpdateOrderVarient({ data }) {
     )
       .then((res) => res.json())
       .then((data) => {
-          setMsg(data.message || "somthing error");
+        setMsg(data.message || "somthing error");
       })
       .finally(() => {
         setIsFetching(false);
@@ -31,8 +32,12 @@ function UpdateOrderVarient({ data }) {
   }
   //// rendering
   return (
-    <div className="flex flex-col gap-10 w-full rounded-md bg-gray-100 text-gray-700 p-4 text-center">
-      <h2 className="font-bold">update order varient:</h2>
+    <div className="flex flex-col gap-2 w-full rounded-md bg-gray-100 text-gray-700 p-4">
+      <h2>copy items id:</h2>
+      <CopyToClipboardSection
+        content={data.items.map((item) => ({ _id: item._id, name:item.product.productName }))}
+      />
+      <h2 className="font-bold text-center">update order varient:</h2>
       <form
         onSubmit={handleVarientSubmit}
         className="flex flex-row flex-wrap gap-4 items-center"
